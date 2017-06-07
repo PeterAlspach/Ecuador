@@ -1,0 +1,330 @@
+---
+title: "Using DiGGer to design breeding trials"
+author: "Peter Alspach"
+date: "9 September 2016"
+output:
+  # html_document:
+  html_notebook:
+    theme: spacelab
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE, error = TRUE)
+```
+
+## Introduction
+
+We have access to a number of trial design software packages (e.g., CycDesigN and the [dae](https://cran.stat.auckland.ac.nz/web/packages/dae/index.html) R package).  I find [`DiGGer`](http://www.austatgen.org/software/) particularly good for breeding trials.  It is available both as a stand-alone executable and as an R-package.  Herein we discuss `r citation('DiGGer')[[1]]$note`.
+
+`DiGGer` is capable of a wide range of designs, some of which are discussed in the ['Quick Guide'](https://iplant.plantandfood.co.nz/biometrics/Documents/DiGGerQuickGuide.pdf) for the R package which comes with the software (but unfortunately not as a vignette).  In particular, the initial swap matrix (see the 'Dummy example' in the 'Seedlings' section below for a simple example) gives `DiGGer` enormous flexibility to deal with non-rectangular blocks, gaps due to existing plants or other structures, alternative blocking criteria (e.g., one might wish to block an experiment on exsiting trees according to some characterisitics of those trees, such as size or disease status, rather than location) and so on.  The text herein is not intended to replicate the 'Quick Guide', but rather to illustrate how `DiGGer` can be used for some of the common situations that arise in the PFR fruit breeding programmes.
+
+The trial should first be set-up in E-Brida, which will define the number of plots and the genotypes.  **After `DiGGer` has created the design, guard plants (and perhaps rows) should be added**.  I create an Excel spreadsheet with the field plan, and ensure the code used to create it is on the sheet (e.g., [BlueberrySeedling2015Design.xlsx](https://iplant.plantandfood.co.nz/Team/bg/premcrop/Data(Research)/BlueberrySeedling2015Design.xlsx)).  Since there is generally a bit of manual manipulation involved in creating this plan, I finish with a sanity check involving reading the plan back into R and checking that the numbers match.
+
+## Preliminaries
+
+It is assumed that the software has been downloaded from the [austatgen site](http://www.austatgen.org/software/), unzipped and the package installed.  The package depends on `R.oo`, `R.methodsS3` and `MASS` - all of which can be installed from the nearest [CRAN mirror](http://cran.stat.auckland.ac.nz/).
+
+```{r libCall}
+library('DiGGer')
+```
+
+## Designs
+
+Row effects are quite common for perennial crops.  This is because many orchard activities are undertaken on a row-by-row basis.  For example, if a gang of contract pruners are engaged to prune the trees, it is likely that different pruners will prune different rows.  This should be considered when designing trials (e.g., for complete block designs, a single row should make up a complete block if possible).
+
+### Advanced selections
+
+Typically advanced selection trials have the same number of replicates for each treatment and are planted in a rectangular grid.  I generally prefer some sort of row-column design.  If there are a large number of selections to be assessed, some sort of incomplete block design is advisable.  In such cases, I prefer that they are resolvable (i.e., they can be resolved into a randomised complete block design).
+
+#### Row-column design
+
+Imagine there are 3 replicates of 13 selections to be planted in 3 rows, each with space for 13 plots (and guard plants).
+
+```{r rowColDesign}
+# Setup
+trtNames <- paste0('Sel', formatC(1:13, flag=0, width=2))
+nTrts <- length(trtNames)
+nReps <- 3
+seed <- c(24375, 14211)
+# Create design
+desDiG <- r2dDiGGer(numberOfTreatments=nTrts, rowsInDesign=nTrts, columnsInDesign=nReps,
+                    rowsInReplicate=nTrts, columnsInReplicate=1,
+                    treatName=trtNames, rngSeeds=seed)
+# Plot design
+ttMat <- matrix(rep(1:nReps, each=nTrts), ncol=nReps, byrow=TRUE)
+desPlot(ttMat, trts=1, label=FALSE, col='grey70')
+desPlot(ttMat, trts=2, label=FALSE, new=FALSE)
+desPlot(ttMat, trts=3, label=FALSE, col='grey70', new=FALSE)
+desPlot(getDesign(desDiG), label=TRUE, bdef=cbind(nTrts,1), bcol='red4', new=FALSE)
+```
+
+Notes on the code above:
+
+* By setting up treatments names and so on at the beginning of the code, one need only change that section to create a different design with different numbers of treatments and reps
+    + It is a good idea to set the random number generator seed, since this means the design can be recreated.  `DiGGer` requires a two seeds, each of which must be an integer between 0 and 31328 inclusive.  I generate this using `round(runif(2)*(10^7))%%31329`, and then cut-paste the result.  One could also just make them up, but don't always use the same seeds
+* `r2dDiGGer` is a wrapper for `DiGGer` to facilitate strict two dimensional designs.  Note, 'rows' refers to the tree position in the row (i.e., the row plot of the design) and columns refers to the field row
+* The code to plot the design perhaps requires a little explaining
+    + First a matrix is created showing the arrangement of the horizontal reps
+    + Next, this matrix is used in the call to `desPlot`.  `desPlot` is a function in the `DiGGer` package that is intended to show the treatments.  By using it with `ttMat` we can colour the horizontal reps differently, but the argument is still called `trts`
+    + The final call fills in the treatments, and marks the vertical reps with a red border
+    + Alternatively, one can use `PAAUtils::plotDesign(getDesign(desDiG), 'red')` which cycles through the treatments high-lighting each one in turn (press \<Esc\> to move to the next one).
+    
+At the moment there appears to be a bug in `r2dDiGGer` such that if the blocks across the rows are rectangular (and not jagged like the example above), it generates an error.  Thus, the following code generates an error
+
+```{r rowColDesignError}
+# Setup
+trtNames <- paste0('Sel', formatC(1:12, flag=0, width=2))
+nTrts <- length(trtNames)
+nReps <- 3
+seed <- c(24375, 14211)
+# Create design
+desDiG <- r2dDiGGer(numberOfTreatments=nTrts, rowsInDesign=nTrts/2, columnsInDesign=nReps*2,
+                    rowsInReplicate=nTrts/2, columnsInReplicate=2,
+                    treatName=trtNames, rngSeeds=seed)
+```
+
+Since `r2dDiGGer` is a wrapper for `corDiGGer`, one can avoid the problem by calling `corDiGGer` and specifying the appropriate `blockSequence`
+
+```{r rowColDesignCor}
+# Setup
+trtNames <- paste0('Sel', formatC(1:12, flag=0, width=2))
+nTrts <- length(trtNames)
+nReps <- 3
+seed <- c(24375, 14211)
+# Create design
+desDiG <- corDiGGer(numberOfTreatments=nTrts, rowsInDesign=nTrts/2, columnsInDesign=nReps*2,
+                    blockSequence=list(c(2,6)), rowsInReplicate=nTrts/2, columnsInReplicate=2,
+                    treatName=trtNames, rngSeeds=seed)
+# Plot design
+ttMat <- matrix(rep(1:nReps, each=nTrts), ncol=2*nReps, byrow=TRUE)
+desPlot(ttMat, trts=1, label=FALSE, col='grey70')
+desPlot(ttMat, trts=2, label=FALSE, new=FALSE)
+desPlot(ttMat, trts=3, label=FALSE, col='grey70', new=FALSE)
+desPlot(getDesign(desDiG), label=TRUE, bdef=cbind(nTrts,1), bcol='red4', new=FALSE)
+```
+
+<!-- Since `r2dDiGGer` is a wrapper for `corDiGGer` which generates an initial design and swap matrices, one could probably get around this by 'manually' creating these initial matrices and calling `corDiGGer` directly.  However, I tend to use version 0.2-31 instead. -->
+
+<!-- ```{r rowColDesign0.2-31} -->
+<!-- detach("package:DiGGer", unload=TRUE) -->
+<!-- library(DiGGer, lib.loc='K:/PAA/R/R-3.3.0/library') # specify location of 0.2-31 -->
+
+<!-- trtNames <- paste0('Sel', formatC(1:12, flag=0, width=2)) -->
+<!-- nTrts <- length(trtNames) -->
+<!-- nReps <- 3 -->
+<!-- # Create design -->
+<!-- tmpDiG <- DiGGer(NumberOfTreatments=nTrts, RowsInDesign=nTrts/2, ColumnsInDesign=nReps*2, -->
+<!--                  RowColumn=TRUE, BlockIn2D=TRUE, TreatmentType='FIXED', -->
+<!--                  TreatmentName=trtNames, RNGSeeds=NULL) -->
+<!-- desDiG <- run(tmpDiG) -->
+<!-- planDiG <- matrix(desDiG$dlist$ENTRY, nrow=nTrts/2) -->
+<!-- detach("package:DiGGer", unload=TRUE) -->
+
+<!-- library(DiGGer) # using version 1.0.1 -->
+<!-- # Plot design created using 0.2-31 using desPlot from 1.0.1 -->
+<!-- ttMat <- matrix(rep(1:nReps, each=nTrts), ncol=nReps*2, byrow=TRUE) -->
+<!-- desPlot(ttMat, trts=1, label=FALSE) -->
+<!-- desPlot(ttMat, trts=2, label=FALSE, col='grey70', new=FALSE) -->
+<!-- desPlot(ttMat, trts=3, label=FALSE, new=FALSE) -->
+<!-- desPlot(planDiG, label=TRUE, bdef=cbind(nTrts/2,2), bcol='red4', new=FALSE, ) -->
+<!-- ``` -->
+
+
+#### Incomplete block design
+
+In this case, imagine a trial to assess 66 advanced selections with two replicates of each, with two-tree plots.  Something like this is not uncommon in the apple programme for example.  One could do a row-column design as above, but the blocks are likely to be too big to consider them 'uniform' in any meaningful sense.  Thus an incomplete block design with 11 plots (22 trees) per incomplete block might be better.
+    
+```{r incompleteBlock, fig.height=9}
+trtNames <- paste0('Sel', formatC(1:66, flag=0, width=2))
+nTrts <- length(trtNames)
+nReps <- 2
+seed <- c(10294, 29690)
+# Create design
+desDiG <- ibDiGGer(numberOfTreatments=nTrts, rowsInDesign=nTrts, columnsInDesign=nReps,
+                   rowsInBlock=11, columnsInBlock=1, treatName=trtNames,
+                   rowsInReplicate=nTrts, columnsInReplicate=1, rngSeeds=seed)
+(concur <- getConcurrence(desDiG))
+# Plot design
+par(mar=c(0.5,2,2,1), oma=c(0,4,0,4))
+planDiG <- desDiG$dlist
+planDiG <- matrix(paste(planDiG$ID, planDiG$REP+planDiG$B111/100, sep=':'), ncol=nReps)
+desPlot(planDiG, rstr='Plant in row', cstr='Rep', bdef=cbind(11,1), bcol='grey60', label=FALSE)
+desPlot(planDiG, bdef=cbind(nTrts,1), bcol='red4', new=FALSE)
+```
+
+Notes on the code above:
+
+* `ibDiGGer` is the wrapper for incomplete block designs.  `rowsInBlock`=11 and `columnsInBlock`=1; i.e., the incomplete blocks of 11 plots are all in one row.  Setting `rowsInReplicate` and `columnsInReplicate` ensures the design is resolvable
+* `getConcurrence` shows the number of pairs of treatments which don't occur together in any incomplete block (`r concur[1]`), those that occur in only one incomplete block (`r concur[2]`) and those that occur in two incomplete blocks (`r concur[3]`).  These should add up to (66^2^-66)/2 = `r (66^2-66)/2`, which it does
+* Ideally the concurrences would be just 0 or 1.  It is possible to continue the search using `desDiG <- run(desDiG, continue=TRUE)` and /or do a more thorough search by increasing the maximum number of interchanges (include `maxInterchanges=1000000` in the original call to `ibDiGGer`; the default is 100000)^[I don't usually bother too much if the A-measure is stable as when the trail is actually planted there are generally tree deaths and/or all plots are not recorded since it quickly becomes obvious the some are not up to standard.]
+* The matrix representation of the design to plot is got 'manually' be retrieving the `dlist` element of `desDiG` and pasting the name, rep and block columns together as name:rep.blk.  These are then plotted using `desPlot`.
+
+### Seedlings
+
+For seedling trials there are typically a number of families (maybe 10-50) and the number of genotypes per family can vary by a couple of orders of magnitude.  But the genotypes themselves are rarely replicated.  Some breeders use check cultivars in their trials and others don't.  Although `DiGGer` allows for placement of checks using a different randomisation strategy, this is not particularly helpful with most PFR perennial breeding trials.  This is because the seedlings are usually planted in family plots (mostly defined by the planting system; e.g., seven-plant bays in kiwifruit), whereas the checks are planted as individual plants.
+
+The ['Quick Guide'](https://iplant.plantandfood.co.nz/biometrics/Documents/DiGGerQuickGuide.pdf) discusses partially replicated designs (Section 2.4, pp 11-14) which I have not found reason to use in seedling trials for perennials (at least partly because of the family plots mentioned above).  However, they have potential to be useful for annual crops such as potato.
+
+#### Dummy example
+
+If the trial has already been set-up in E-Brida one might retrieve the necessary information directly from there, as the following example illustrates^[Note: since this trial has already been designed and planted it has Group_Code and some observations (e.g., TrlPlot).  This will not usually be the case.].
+
+```
+# retrieve genotypes from E-Brida
+bcEg <- EBData2(7, trialName='Genetic Seedling - Motueka 2015 - Parental')
+# subset to exclude the checks
+bcEg <- bcEg[grep('^R[[:digit:]]{2}\\.', bcEg$ObjectNr),]
+```
+
+Imagine a situation with 17 families, with varying numbers of seedlings (from 12 to 462) per family, to be planted in 5-plant plots.  There are 10 rows available each with space for 200 plots, but the first 10 positions of the first row are unavailable (perhaps occupied by an existing trial).
+
+```{r dummyExample}
+# Create dummy data as might have been extracted from E-Brida
+nReps <- c(34,134,17,255,70,67,462,55,29,112,334,12,54,77,91,72,61)
+sdlgs <- paste0('R14.', rep(37:53, nReps))
+sdlgs <- paste(sdlgs, formatC(sequence(nReps), flag=0, width=3), sep='-')
+sdlgs <- c(sdlgs, rep('Check', 10))
+list(head=head(sdlgs), tail=tail(sdlgs))
+# Setup
+nRows <- 10
+nPlotsInRow <- 200/5
+sdlgs <- sdlgs[grep('^R14\\.[[:digit:]]{2}', sdlgs)]
+fams <- substring(sdlgs, 1, 6)
+ttTab <- floor(table(fams)/5)
+ttTab <- ttTab[ttTab!=0]
+trtReps <- c(ttTab)
+trtName <- names(ttTab)
+nTrt <- length(trtReps)
+initSwap <- matrix(rep(c(0,1,0), c(2, sum(trtReps), nRows*nPlotsInRow-(2+sum(trtReps)))), ncol=nRows)
+sum(initSwap)==sum(trtReps) # should be TRUE
+initDes <- initSwap
+set.seed(3174852)
+initDes[initDes==1] <- sample(rep(1:length(trtName), trtReps))
+seed <- c(518,29661)
+# Create design
+desDiG <- corDiGGer(numberOfTreatments=nTrt, rowsInDesign=nrow(initSwap), columnsInDesign=ncol(initSwap),
+                    blockSequence=list(c(10,2)),
+                    spatial=TRUE, rowColumn=TRUE,
+                    treatType="RANDOM", treatVarianceRatio=0.4,
+                    treatName=trtName, treatRepPerRep=trtReps,
+                    initialDesign=initDes, initialSwap=initSwap, rngSeeds=seed)
+# Plot design
+par(mar=c(0.5,2,2,1), oma=c(0,4,0,4))
+planDiG <- matrix(desDiG$dlist$ID, ncol=ncol(initSwap))
+desPlot(planDiG, rstr='Plant in row', cstr='Rep', bdef=cbind(10,2), bcol='red4')
+desPlot(planDiG, trts='R14.47', col='green4', new=FALSE)
+desPlot(planDiG, trts='R14.39', col='grey60', new=FALSE)
+desPlot(planDiG, trts='R14.41', col='blue3', new=FALSE)
+# plotDesign(planDiG, 'red3')
+```
+
+Notes on the code above:
+
+* The first section (four lines) attempts to create a dataset as might have been retrieved from E-Brida.  It will not always look like this.  For example, if the plants have not been individualised (i.e., a nursery trial) the pedigree item names will just be the family and the checks are unlikely to be present
+* In the set-up phase
+    + Declare the number of rows and the number of full-sib plots per row
+    + Subset `sdlgs` to retain only those beginning with 'R14.' following by two digits (i.e., remove checks), and get the family names by taking the first six characters
+    + Tabulate the families, divide by five (since the plots are of five plants) and round down to get the number of plots per family.  Remove any families with no plots (in this case there are none)
+    + These are assigned to `trtRreps` and `trtName` to be consistent with other code in this document
+    + Create an initial swap matrix with `r nPlotsInRow` rows and `r nRows` columns.  Put 0 where the spaces are unavailable (first two plots of the first row) or not required (last `r nRows*nPlotsInRow-(2+sum(trtReps))` plots of the last row), and 1 elsewhere.  There's a sanity check here to ensure that the total number of plots is indeed the same as the sum of the `initSwap` (i.e., number of 1's)
+    + Make an initial design by randomly assigning the treatments (i.e., families) to the locations in `initSwap` which are equal to 1
+* The call to `corDiGGer` can now be made.  It is important to set `blockSequence` in order that the spatial AR correlation doesn't overwhelm the design (see below)
+* The plotting of the design is essentially the same as previously.  The 'block' boundaries have been chosen to match the `blockSequence` argument, and three treatments have been highlighted.
+
+The design below was created using the same code as previously, except `blockSequence` was not specified.  Note the tendency towards diagonal location of plots of the same treatment, and the poor randomisation of the families represented by few plots.
+
+```{r dummyExampleNoBS, echo=FALSE}
+# Create design
+desDiG <- corDiGGer(numberOfTreatments=nTrt, rowsInDesign=nrow(initSwap), columnsInDesign=ncol(initSwap),
+                    spatial=TRUE, rowColumn=TRUE,
+                    treatType="RANDOM", treatVarianceRatio=0.4,
+                    treatName=trtName, treatRepPerRep=trtReps,
+                    initialDesign=initDes, initialSwap=initSwap, rngSeeds=seed)
+# Plot design
+par(mar=c(0.5,2,2,1), oma=c(0,4,0,4))
+planDiG <- matrix(desDiG$dlist$ID, ncol=ncol(initSwap))
+desPlot(planDiG, rstr='Plant in row', cstr='Rep', bdef=cbind(10,2), bcol='red4')
+desPlot(planDiG, trts='R14.47', col='green4', new=FALSE)
+desPlot(planDiG, trts='R14.39', col='grey60', new=FALSE)
+desPlot(planDiG, trts='R14.41', col='blue3', new=FALSE)
+# plotDesign(planDiG, 'red3')
+```
+
+##### Final details
+
+There are still a few tasks to do:
+
+* Allocate the checks
+* Deal with the left over plants
+* Assign GroupCodes (i.e., the plant location codes as used by the particular crop)
+
+_Allocate checks_  
+This will depend on how many checks there are, and whether they are all of one cultivar.  One might simply chose a random plot in each row and assign the second plant to be a check^[I don't usually use the first plant as this might be next to a post and thus potentially unusual.].  Alternatively, at an earlier stage one might have kept a number of plots with only 4 plants, and then completed these with checks.  In this particular case that would have created an extra `r sum(nReps%%5==4)` plots.  This is at least partly the approach I usually take.
+
+_Left over plants_  
+I generally leave these for the breeder to deal with.  Sometimes they simply discard them, or keep them for replants; other times they fill in the ends of rows^[Pipfruit breeders tend to plant by machine and thus often have ragged rows to complete.]
+
+_GroupCodes_  
+Sometimes the breeder/technician will do this themselves, but other times I do so.  It could be done at the time of design, but I usually wait until after planting so that any left over plants which were planted, or mistakes made, can be accommodated.
+
+##### Further notes on `initSwap`
+
+The initial swap matrix `initSwap` can have values other than 0 and 1.  For example, in the 'Motueka 2016 Block R3 Seedlings' trial (in E-Brida, with the [DiGGer code on github](https://github.com/PlantandFoodResearch/Biometrics/blob/PeterAlspach/BreedingAnalyses/Kiwifruit/Novels/Motueka2016BlockR3SeedlingsDiGGerCode.R)), bays 1, 4, 9 (and 14 but this was not relevant for the first planting) of rows 501, 505, 509, 513, 517 and 521 had a post for holding the shelter and thus room for only 6 rather than 7 plants.  One approach would be to ignore this at the design stage, and simply omit the plant as appropriate and add it to the list of extras.  Another approach (used in the code) is to utilise these smaller plots to accommodate the families with 4, 5 or 6 left over plants.  This was achieved by giving these bays initial swap values of 2, and setting up the initial design to ensure the desired families went there.
+
+### Some standard examples
+
+#### Randomised complete block
+
+These are easy enough to do using any software which undertakes randomisation.  Generally some sort of row-column or incomplete block design would be better for breeding trials.  Nevertheless, they are simple to do using `DiGGer`.  Here's an example for an RCB with 6 treatments and 4 reps.
+
+```{r rcb}
+# Setup
+trtNames <- paste0('Sel', formatC(1:6, flag=0, width=2))
+nTrts <- length(trtNames)
+nReps <- 4
+seed <- c(664, 8210)
+# Create design
+desDiG <- corDiGGer(numberOfTreatments=nTrts, rowsInDesign=nTrts, columnsInDesign=nReps,
+                    rowsInReplicate=nTrts, columnsInReplicate=1,
+                    treatName=trtNames, rngSeeds=seed)
+# Plot design
+ttDes <- getDesign(desDiG)
+desPlot(ttDes, trts=1, col='grey70')
+desPlot(ttDes, trts=2, new=FALSE)
+desPlot(ttDes, trts=3, col='wheat', new=FALSE)
+desPlot(ttDes, trts=4, col='lavender', new=FALSE)
+desPlot(ttDes, trts=5, col='pink', new=FALSE)
+desPlot(ttDes, trts=6, col='lightBlue', new=FALSE)
+```
+
+#### Latin square
+
+An example of a 6x6 Latin square
+
+```{r latinSquare}
+# Setup
+trtNames <- paste0('Sel', formatC(1:6, flag=0, width=2))
+nTrts <- length(trtNames)
+nReps <- 6
+seed <- c(2149, 22610)
+# Create design
+desDiG <- corDiGGer(numberOfTreatments=nTrts, rowsInDesign=nTrts, columnsInDesign=nReps,
+                    blockSequence=list(c(1,6)), rowsInReplicate=nTrts, columnsInReplicate=1,
+                    treatName=trtNames, rngSeeds=seed)
+# Plot design
+ttDes <- getDesign(desDiG)
+desPlot(ttDes, trts=1, col='grey70')
+desPlot(ttDes, trts=2, new=FALSE)
+desPlot(ttDes, trts=3, col='wheat', new=FALSE)
+desPlot(ttDes, trts=4, col='lavender', new=FALSE)
+desPlot(ttDes, trts=5, col='pink', new=FALSE)
+desPlot(ttDes, trts=6, col='lightBlue', new=FALSE)
+```
+
+#### Split-plot design
+
+I cannot recall using such designs in a breeding trial, however the ['Quick Guide'](https://iplant.plantandfood.co.nz/biometrics/Documents/DiGGerQuickGuide.pdf) gives an example on page 18,20 and 21.
