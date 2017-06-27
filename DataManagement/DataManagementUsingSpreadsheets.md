@@ -60,7 +60,7 @@ Good data management doesn't just happen.  It is a good idea to nominated __data
 &nbsp;
 
 * This sheet describes the columns in the Data Sheet(s) in more detail.
-* It should contain three columns: the first column exactly matches the column headers in the Data Sheet(s), the second column describes it in more detail as one might in a figure caption, and the third gives the detail that might be in the Methods and Materials section of a manuscript (i.e. sufficient to allow another researcher to replicate the method exactly.  For example, frtWgt : Fruit weight (g) : Average weight (g) of a single fruit at harvest based on a sample size as given in nFrtSamp.
+* It should contain three columns: the first column exactly matches the column headers in the Data Sheet(s), the second column describes it in more detail as one might in a figure caption, and the third gives the detail that might be in the Methods and Materials section of a manuscript (i.e. sufficient to allow another researcher to replicate the method exactly).  For example, frtWgt : Fruit weight (g) : Average weight (g) of a single fruit at harvest based on a sample size as given in nFrtSamp.
 * Every column in the Data Sheet(s) should have an entry in the Terms Sheet, but it may not be necessary to complete the third (or even second) column if the term is fully self-explanatory.
 * Even 'obvious' terms are not always so for researchers from a different discipline (e.g. 'block' to some is obviously the orchard block, but to others would obviously be a feature of the statistical design of the experiment).
 
