@@ -4,12 +4,14 @@ This is a best practice document for spreadsheet (e.g. Excel) files containing m
 
 ## Guiding principles
 
-* Data should be easy to search for and find by anyone in INIAP at any time.
 * It should be clear what the data are and who should be credited.
+* Data should be easy to search for, find and use by anyone in INIAP at any time.
+* There should be a clear trail from the raw data to the final analyses and figures to enable reproducibility of the results.
+* Raw data are a precious resource. They cannot be reproduce again. All other steps in the analysis pipeline are repeatable. 
 
 ## Stewardship
 
-Good data management doesn't just happen.  It is a good idea to nominated __data stewards__ who work within a science team or science project, ensuring that the team or project's data are appropriately managed.
+Good data management doesn't just happen.  It is a good idea to nominate __data stewards__ who work within a science team or science project, ensuring that the team or project's data are appropriately managed.
 
 ## Storage
 
@@ -32,7 +34,6 @@ Good data management doesn't just happen.  It is a good idea to nominated __data
 * Provide one sheet with a list of features measured and a description (The Terms Sheet).
 * For most projects, it is appropriate to provide one sheet with the trial design.
 * Provide one or more sheets with the measured data (see below) (The Data Sheet).
-* **Never** password protect an Excel sheet or workbook.
 
 ## Sheets
 
@@ -92,6 +93,8 @@ Good data management doesn't just happen.  It is a good idea to nominated __data
 
 * Use Excel's [data validation](https://www.google.co.nz/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CBsQFjAAahUKEwib4OiOts3IAhWlrKYKHQj5CRk&url=https%3A%2F%2Fsupport.office.com%2Fen-us%2Farticle%2FApply-data-validation-to-cells-c743a24a-bc48-41f1-bd92-95b6aeeb73c9&usg=AFQjCNG5Ms2uOq7IVPuVgBtaDsv17tysLA&sig2=n9fdPizIEyRS7sSxuUahCg), as in the Data Sheet screen-shot with the drop-down menu for treeSize.  Note, this can be configured to issue a warning rather than trigger an error if numbers are outside the expected range.
 * Use simple checks of minima and maxima, either as a couple of rows along the top (which can be removed once all data collection is complete) or as a pivot table.
+* Conditional formatting can be helpful.
+* Use filtering to check for errors in entry, but be aware the Excel will not identify difference in case and leading/trailing spaces (e.g., 'Good', 'good' and 'good ' will all appear the same).  
 * Be aware that Excel may automatically apply irreversible formatting to your data. According to Microsoft support:
     + If a number contains a slash mark (/) or hyphen (-), it may be converted to a date format
     + If a number contains a colon (:), or is followed by a space and the letter A or P, it may be converted to a time format
@@ -100,6 +103,17 @@ Good data management doesn't just happen.  It is a good idea to nominated __data
    
 Certain types of data (e.g. clone identifiers, gene names, plate coordinates) are particularly susceptible to these issues. To avoid the problem, make sure to first select the whole spreadsheet and Format -> Cells -> Number -> Text when pasting data into Excel (the default is "General").  If using this approach, even genuine dates will be regarded as text, and very long data strings (e.g. sequence data) may be converted to hash (#) characters. If this occurs, it is necessary to switch these cells back to "General" format.
 
+## Data archiving
+* Raw data are precious. They cannot be collected again. All other steps in the analysis pipeline can be repeated (and should be repeatable). Once you have finished entering and checking data lock the sheet (or the cells) in the sheet to prevent any errors. 
+* Don't make copies as the data file (other than for back-up purposes).
+* There should be an unbroken and repeatable trail from the raw data to the final report (including analyses, figures and tables).
+
+## Other points
+
+* Decide on a missing value indicator.  A blank cell is acceptable, but * or NA are better.  By aware that Excel graphs treat missing data as zero (the formula =IF(ISNUMBER(A2),A2,NA()) can be helpful here).
+* Paper data sheets should be scanned, and kept in a save place.  Both the location of the original paper sheets and the scanned versions should be recorded in the spreadsheet (the latter as a link).
+* Files recorded by machines (e.g., temperature loggers) should be kept unaltered.  The information can also be directly copied into the Excel file.
+* The original raw data should not be changed.  Any changes deemed necessary should be made in the code used to analyse the data.
 
 See also
 --------
