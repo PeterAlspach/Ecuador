@@ -31,7 +31,7 @@ What to consider?
 * How will the data be captured, stored and analysed?
 * Is the trial intended to establish [equivalence](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3019319/) (at some acceptable level) or difference? 
 
-<h3 style="text-align: center; color: darkblue; font-size: 1.5em;" markdown="1"> All experimental design involves compromise </h3>
+<h3 style="text-align: center; color: darkgreen; font-size: 1.5em;" markdown="1"> All experimental design involves compromise </h3>
 
 An Applied Statistician's Creed
 ========================================================
@@ -56,7 +56,7 @@ Randomise and Replicate
 * Can the results be generalised?
 * Is the experiment testing relevant treatments (e.g., stage in breeding trials with densely planted trees of different genotypes, and hence P&D susceptibilty, _versus_ commerical situation with wider spacing all of the same level of P&D tolerance/resistances, perhaps grown on rootstocks)
 
-<h3 style="text-align: center; color: darkblue; font-size: 1.5em;" markdown="1"> Beware of pseudo-replication </h3>
+<h3 style="text-align: center; color: darkgreen; font-size: 1.5em;" markdown="1"> Beware of pseudo-replication </h3>
 
 "Common" Designs
 ==========================================================

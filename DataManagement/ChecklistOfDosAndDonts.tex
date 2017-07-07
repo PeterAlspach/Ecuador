@@ -1,0 +1,79 @@
+\documentclass[12pt]{article} % use larger type; default would be 10pt
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+\geometry{margin=2cm} % or letterpaper (US) or a5paper or....
+
+\usepackage{graphicx} % support the \includegraphics command and options
+\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{times} % for Times Roman default font
+
+%%% PACKAGES
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{booktabs} % for much better looking tables
+\usepackage{hyperref} % make it possible to insert hyperlinks
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{pifont} % for check mark
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+\setcounter{secnumdepth}{0} % turn off section numbering
+
+\makeatletter
+\renewcommand{\maketitle}{%
+  {\bfseries{\scshape{\Large{\@title\par}}}}
+}
+\makeatother
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{Checklist of Dos and Don'ts for Spreadsheets}
+
+\begin{document}
+  \maketitle
+
+The following is a checklist of things to do, and not to do, when using the \href{https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/DataManagementUsingSpreadsheets.html}{Data sheet(s)} in spreadsheets for data.  As such it does not necessarily apply to optional extra sheets that a user might create (e.g., for summarising data).
+
+\section{DO}
+\ding{51} Ensure column names only contain alpha-numeric characters (not symbols)\\
+\ding{51} Start column names with a letter (not a digit / number)\\
+\ding{51} Put column names in a single row\\
+\ding{51} Have the same columns names as in the `Terms' sheet\\
+\ding{51} Make column names unique\\
+\ding{51} Keep column names consistent (including consistent case) across years and similar trials\\
+\ding{51} Use freeze panes so header rows and treatment columns are always visible\\
+\ding{51} Put data of different types (text, numbers) in separate columns\\
+\ding{51} Format columns as dates before entering date data\\
+\ding{51} Format columns as text before entering text data (otherwise Excel may treat it as a date)\\
+\ding{51} Use data validation to select from a drop-down list for treatments to prevent spelling mistakes and inconsistencies\\
+\ding{51} Separate data columns from calculated data (preferably on a separate sheet)\\
+\ding{51} Code missing data explicitly (* or NA)\\
+\ding{51} Make a note of changes to the Data sheet after data entry\\
+\ding{51} When finished data entry and checking protect the Data sheet to prevent downstream changes\\
+\ding{51} Only use this protected sheet for all subsequent analyses\\
+
+
+\section{Please DON'T}
+\ding{55} Merge cells\\
+\ding{55} Use colour to code data\\
+\ding{55} Embed data summaries within raw data\\
+\ding{55} Overuse in-cell comments (they won't be read by other software).\\
+\ding{55} Reorder the rows\\
+\ding{55} Modify the data once it has been finalised (i.e., protected) unless a genuine mistake is detected (then be sure to note the change as above)\\
+\ding{55} Make copies of the Data sheet\\
+
+
+
+
+\end{document}
