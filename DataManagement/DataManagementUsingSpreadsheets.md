@@ -87,7 +87,7 @@ Good data management doesn't just happen.  It is a good idea to nominate __data 
 * Avoid use of hidden columns and rows within the data area - these can be easily overlooked by viewers of the spreadsheet, and software that imports Excel data will probably include the "hidden" cells to the surprise of those doing the analysis.
 * Figures should not be on the Data Sheet.
 * Do not embed calculated rows (e.g. means), but use pivot tables instead.  Calculated columns are acceptable.
-* Once data collection and checking is complete, freeze the Data Sheet so that all data are **read only** within it.
+* Once data collection and checking is complete, protect the Data Sheet so that all data are **read only** within it.
 
 ## Data checking
 
