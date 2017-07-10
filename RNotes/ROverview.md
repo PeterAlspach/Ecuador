@@ -61,6 +61,7 @@ What's not to like?
 Structure
 =========================================================
 <h3 style="color: darkred;" markdown="1"> Note: the following is unlikely to make much sense initially</h3>
+
 * R has two broad categories of objects
     * __Functions__ which do the work
     * __Data objects__ which store the data and results
@@ -72,10 +73,14 @@ Structure
 * R is object-oriented
 
 ***
+
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 Estructura
+
 <h3 style="color: darkred; font-size: 0.97em;" markdown="1"> Nota: lo siguiente es poco probable que tenga mucho sentido inicialmente</h3>
+
 <h3 style="color: green; font-size: 0.97em;" markdown="1">
+
 * R tiene dos grandes categor&#237;as de objetos
     * __Funciones__ que hacen el trabajo
     * __Elementos de datos__ que almacenan los datos y los resultados
