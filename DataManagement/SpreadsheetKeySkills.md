@@ -1,6 +1,6 @@
 Key skills for using spreadsheets
 ========================================================
-author: Peter Alspach (with thanks to Andrew McLachlan)
+author: P Alspach & A McLachlan
 date: July 2017
 autosize: true
 font-family: "Times New Roman", Times, serif
@@ -27,7 +27,7 @@ Features (and traps)
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 Caracter&#x00ED;sticas (y trampas)
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em;" markdown="1">
 
 + Formateo
     + Paneles de congelaci&#x00F3;n
@@ -39,26 +39,40 @@ Caracter&#x00ED;sticas (y trampas)
 + Protecci&#x00F3;n de datos
 + Fechas
 
-Setting up a sheet
+Setting up a sheet (1)
 ========================================================
 
+* Using, and creating, templates (_Templates_)
 * Keeping row and column titles visible (_Freeze panes_)
 * Filling blank cells with the value above
 * Calculating a repeating list of values (_Formulae_)
+
+***
+
+<h3 style="color: darkgreen; font-size: 1.5em;" markdown="1">
+Configuraci&#x00F3;n de una hoja (1)
+
+<h3 style="color: green; font-size: 0.9em;" markdown="1">
+
++ Utilizando, y creando, plantillas (_Plantillas_)
++ Mantener los t&#x00ED;tulos de filas y columnas visibles (_congelar paneles_)
++ Rellenar celdas en blanco con el valor anterior
++ C&#x00E1;lculo de una lista repetida de valores (_F&#x00F3;rmulas_)
+
+Setting up a sheet (2)
+========================================================
+
 * Enable filters for the factor columns (_Filtering_)
     + Findind mis-spelt treatment labels (_Filtering_)
 * Create a dropdown list for data entry (_Data validation_)
 
 ***
 
-<h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
-Configuraci&#x00F3;n de una hoja
+<h3 style="color: darkgreen; font-size: 1.5em;" markdown="1">
+Configuraci&#x00F3;n de una hoja (2)
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em;" markdown="1">
 
-+ Mantener los t&#x00ED;tulos de filas y columnas visibles (_congelar paneles_)
-+ Rellenar celdas en blanco con el valor anterior
-+ C&#x00E1;lculo de una lista repetida de valores (_F&#x00F3;rmulas_)
 + Habilitar filtros para las columnas factor (_Filtrado_)
     + Encontrar etiquetas de tratamiento mal escritas (_Filtrado_)
 + Crear una lista desplegable para la entrada de datos (_Validaci&#x00F3;n de datos_)
@@ -77,7 +91,7 @@ Data checking
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 Comprobaci&#x00F3;n de datos
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em;" markdown="1">
 
 + Validaci&#x00F3;n de datos a medida que se ingresa (_Validaci&#x00F3;n de datos_)
 + F&#x00F3;rmulas para el control de datos (_F&#x00F3;rmulas_)
@@ -95,7 +109,7 @@ Summarising data
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 Resumen de datos
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em;" markdown="1">
 
 + Tablas de resumen (_tablas din&#x00E1;micas_)
 
@@ -112,7 +126,7 @@ Other useful features
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 Otras caracter&#x00ED;sticas utiles
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em;" markdown="1">
 
 + Protecci&#x00F3;n de datos (_Protecci&#x00F3;n de datos_)
 + Fechas
