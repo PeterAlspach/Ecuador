@@ -22,9 +22,12 @@ Why is data management important?
     + Enhance reproducibility
     
 ***
+
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 El manejo de datos es importante
+
 <h3 style="color: green;" markdown="1">
+
 + Los datos son un activo importante para INIAP y usted como investigador
 + Una buena gesti&#x00F3;n de datos puede
     + Aumentar la eficiencia
@@ -43,9 +46,12 @@ What is data?
 * Meta-data
 
 ***
+
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 &#191;Qu&#233; son los datos?
+
 <h3 style="color: green;" markdown="1">
+
 + No son s&#243;lo los n&#250;meros recolectados
 + Incluye
     + Protocolo de ensayo (por ejemplo, investigadores, tratamientos, dise&#241;o de ensayo, plan de campo, disposici&#243;n de muestras, unidades de medida, etc.)
@@ -63,9 +69,12 @@ FAIR data
 * Reusable
 
 ***
+
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 Datos BAIR
+
 <h3 style="color: green;" markdown="1">
+
 + Buscable
 + Accesible
 + Interoperable
@@ -84,9 +93,12 @@ The data-chain
 * Long-term storage
 
 ***
+
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 La cadena de datos
+
 <h3 style="color: green;" markdown="1">
+
 + Planificaci&#243;n de la investigaci&#243;n
 + Planificar la recopilaci&#243;n y el almacenamiento de datos
 + Recolecci&#243;n de datos
@@ -103,8 +115,11 @@ Data collection and storage
 * For projects with larger amounts of data from different sources (e.g., manually and automatically collected, using complex equipment) and intended to run over a number of years, [relational databases](https://en.wikipedia.org/wiki/Relational_database), using [SQL](https://en.wikipedia.org/wiki/SQL) are advisable (i.e., __not__ MicroSoft Access).  [NoSQL](https://en.wikipedia.org/wiki/NoSQL) is becoming increasingly popular
 
 ***
+
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 Recolecci&#243;n y almacenamiento de datos
+
 <h3 style="color: green;" markdown="1">
+
 + Para muchos proyectos, los archivos planos (es decir, hojas de c&#225;lculo de Excel) son satisfactorios si [bien utilizados](https://github.com/PlantandFoodResearch/BestPractices/blob/master/general/best_practices_excel_data_file.md)
 + Para proyectos con mayores cantidades de datos procedentes de diferentes fuentes (por ejemplo, recolectados manual y autom&#225;ticamente, utilizando equipos complejos) y destinados a funcionar durante varios a&#250;os, [bases de datos relacionales](https://en.wikipedia.org/wiki/Relational_database),  es aconsejable utilizar [SQL] (https://en.wikipedia.org/wiki/SQL) (es decir, not MicroSoft Access).  [NoSQL](https://en.wikipedia.org/wiki/NoSQL) es cada vez m&#225;s popular
