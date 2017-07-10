@@ -1,4 +1,48 @@
+# .gitignore
+
+# R files (history etc)
+*.RData
+*.Rhistory
+*.Rproj
+
+# Example code in package build process
+*-Ex.R
 .Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+
+
+# Sweave related files
+*.aux
+*.bbl
+*.blg
+*.gz
+*.log
+*.sty
+*.tex
+
+# Sweave cache related files
+__globals
+__objects
+__packages
+*.rdb
+*.rdx
+
+# Folders
+DataManagement/reexceltipsandtricks/
+
+# Other files
+*.csv
+*.doc
+*.docx
+# *.html
+# !*.nb.html
+*.lnk
+*.mediawiki
+*.pdf
+*.png
+# *.jpg
+*.svg
+*.svn
+*.swf
+*.txt
+# *.xls
+# *.xlsx
