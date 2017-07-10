@@ -4,11 +4,12 @@ author: Peter Alspach
 date: July 2017
 autosize: true
 font-family: "Times New Roman", Times, serif
+
 ***
+
 ...
 <h3 style="color: darkgreen; font-size: 1.7em;" markdown="1">
 R: visi&#243;n de conjunto
-<!-- ![R](RLogo.jpg) -->
 <img src="RLogo.jpg" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" width="85%" />
 
 Why R?
@@ -25,6 +26,7 @@ Why R?
 * [R Markdown](http://rmarkdown.rstudio.com/) and [knitr](https://yihui.name/knitr/) for producing reports
 
 ***
+
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 &#191;Por qu&#233; R?
 <h3 style="color: green;" markdown="1">
