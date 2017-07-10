@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Data Management Overview</title>
+  <title>Trial Design Overview</title>
     
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -784,7 +784,7 @@ hljs.initHighlightingOnLoad();
   <div class="slides">
 
 <section data-state="section" data-transition="linear" data-transition-speed="default">
-<h1>Data Management Overview</h1><p>Peter Alspach<br/>July 2017</p>
+<h1>Trial Design Overview</h1><p>Peter Alspach<br/>July 2017</p>
 
 <div class="column column1 slideContent" >
 
@@ -795,19 +795,22 @@ hljs.initHighlightingOnLoad();
 
 <p>&hellip;
 <h3 style="color: darkgreen; font-size: 1.7em;" markdown="1">
-Informaci&#x00F3;n general sobre la gesti&#x00F3;n de datos</p>
+Visi&#243;n general del dise&#241;o de experimentos</p>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Why is data management important?</h3>
+<h3>Why is trial design important?</h3>
 <div class="column column1 slideContent" >
 <ul>
-<li>Data is an important asset for INIAP and you as a researcher</li>
-<li>Good data management can
+<li>The purpose of an experiment is to identify important effects and estimate their size (i.e., it is not simply hypothesis testing)</li>
+<li>Essential for valid results</li>
+<li>Good trial design can
 
 <ul>
+<li>Lead to readily interpretable results</li>
+<li>Reduce the chance of erroneous or spurious results</li>
 <li>Increase efficiency</li>
 <li>Improve data quality</li>
 <li>Improve ability to use historical data</li>
@@ -823,17 +826,20 @@ Informaci&#x00F3;n general sobre la gesti&#x00F3;n de datos</p>
 
 
 <p><h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
-El manejo de datos es importante
+&#191;Por qu&#233; es importante el dise&#241;o experimental?
 <h3 style="color: green;" markdown="1"></p>
 
 <ul>
-<li>Los datos son un activo importante para INIAP y usted como investigador</li>
-<li>Una buena gesti&#x00F3;n de datos puede
+<li>El prop&#243;sito de un experimento es identificar efectos importantes y estimar su tama&#241;o (es decir, no es simplemente una prueba de hip&#243;tesis)</li>
+<li>Esencial para resultados v&#225;lidos</li>
+<li>Buen dise&#241;o de prueba puede
 
 <ul>
+<li>Conducir a resultados f&#225;cilmente interpretables</li>
+<li>Reducir la posibilidad de resultados err&#243;neos o falsos</li>
 <li>Aumentar la eficiencia</li>
 <li>Mejorar la calidad de los datos</li>
-<li>Mejorar la capacidad de utilizar datos hist&#x00F3;ricos</li>
+<li>Mejorar la capacidad de utilizar datos hist&#243;ricos</li>
 <li>Reducir el desperdicio</li>
 <li>Mejorar la reproducibilidad</li>
 </ul></li>
@@ -843,18 +849,23 @@ El manejo de datos es importante
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>What is data?</h3>
+<h3>What to consider?</h3>
 <div class="column column1 slideContent" >
 <ul>
-<li>It is <strong>not</strong> just the numbers collected</li>
-<li>It includes
+<li>Type I and type II errors.  That is, one wants to
 
 <ul>
-<li>Trial protocol (e.g., researchers, treatments, trial design, field plan, sample layout, units of measurement, and so on)</li>
-<li>Trial history (e.g., when measurements were collected, what went on, weather, <strong>audit trail</strong> of data)</li>
+<li>Avoid detection of non-existence (or unimportant) effects</li>
+<li>Detect an effect that is actually present</li>
 </ul></li>
-<li>Meta-data</li>
+<li>Cost (Is the experiment as proposed affordable?  Is there a good cost-benefit ratio?)</li>
+<li>Practicality (Can the experiment actually be done as designed?  Is it so complicated that the chance of making a mistake is unacceptably high?)</li>
+<li>What to measure</li>
+<li>How will the data be captured, stored and analysed?</li>
+<li>Is the trial intended to establish <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3019319/">equivalence</a> (at some acceptable level) or difference? </li>
 </ul>
+
+<h3 style="text-align: center; color: darkred; font-size: 1.2em;" markdown="1"> All experimental design involves compromise</h3>
 
 
 </div>
@@ -862,34 +873,44 @@ El manejo de datos es importante
 <div class="column column2 slideContent" >
 
 
-<p><h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
-&#191;Qu&#233; son los datos?
-<h3 style="color: green;" markdown="1"></p>
+<h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
+&#191;Qu&#233; considerar?
+<h3 style="color: darkred; font-size: 1.2em;" markdown="1"> Todo dise&#241;o experimental implica compromiso</h3>
+
+<p><h3 style="color: green;" markdown="1"></p>
 
 <ul>
-<li>No son s&#243;lo los n&#250;meros recolectados</li>
-<li>Incluye
+<li>Errores de tipo I y II. Es decir, uno quiere
 
 <ul>
-<li>Protocolo de ensayo (por ejemplo, investigadores, tratamientos, dise&#241;o de ensayo, plan de campo, disposici&#243;n de muestras, unidades de medida, etc.)</li>
-<li>Historia del ensayo (por ejemplo, cuando se recogieron las mediciones, lo que sucedi&#243;, el tiempo, la pista de auditor&#237;a de los datos)</li>
+<li>Evitar la detecci&#243;n de efectos no existentes (o no importantes)</li>
+<li>Detecta un efecto que est&#225; realmente presente</li>
 </ul></li>
-<li>Meta-datos</li>
+<li>Costo</li>
+<li>Practicality</li>
+<li>Qu&#233; medir</li>
+<li>&#191;C&#243;mo se capturan, almacenan y analizan los datos?</li>
+<li>&#191;Est&#225; el ensayo destinado a establecer <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3019319/">equivalencia</a> (en alg&#250;n nivel aceptable) o diferencia?</li>
 </ul>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>FAIR data</h3>
+<h3>An Applied Statistician&#x27;s Creed</h3>
 <div class="column column1 slideContent" >
-<p><a href="https://www.nature.com/articles/sdata201618">FAIR</a> data are</p>
+<p>Nester, MR (1996) Applied Statistics 45(4):401-410</p>
 
 <ul>
-<li>Findable</li>
-<li>Accessible</li>
-<li>Interoperable</li>
-<li>Reusable</li>
+<li><strong>Treatments</strong>: all treatments differ</li>
+<li><strong>Factors</strong>: all factors interact</li>
+<li><strong>Correlations</strong>: all variables are correlated</li>
+<li><strong>Populations</strong>: no two populations are the same in any respect</li>
+<li><strong>Normality</strong>: no data are normally distributed</li>
+<li><strong>Variances</strong>: variances are never equal</li>
+<li><strong>Models</strong>: all models are wrong</li>
+<li><strong>Equality</strong>: no two numbers are the same</li>
+<li><strong>Size</strong>: many numbers are very small</li>
 </ul>
 
 
@@ -899,31 +920,77 @@ El manejo de datos es importante
 
 
 <p><h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
-Datos BAIR
+Credo de un estad&#237;stico aplicado
 <h3 style="color: green;" markdown="1"></p>
 
 <ul>
-<li>Buscable</li>
-<li>Accesible</li>
-<li>Interoperable</li>
-<li>Reutilizable</li>
+<li><strong>Tratamientos</strong>: todos los tratamientos difieren</li>
+<li><strong>Factores</strong>: todos los factores interact&#250;an</li>
+<li><strong>Correlaciones</strong>: todas las variables est&#225;n correlacionadas</li>
+<li><strong>Populaciones</strong>: no hay dos poblaciones iguales en ning&#250;n aspecto</li>
+<li><strong>Normalidad</strong>: no se distribuyen normalmente los datos</li>
+<li><strong>Variancias</strong>: las variaciones nunca son iguales</li>
+<li><strong>Modelos</strong>: todos los modelos est&#225;n equivocados</li>
+<li><strong>Equality</strong>: no hay dos n&#250;meros iguales</li>
+<li><strong>Size</strong>: muchos n&#250;meros son muy peque&#241;os</li>
 </ul>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>The data-chain</h3>
+<h3>Randomise and Replicate</h3>
 <div class="column column1 slideContent" >
 <ul>
-<li>Research planning</li>
-<li>Plan data collection and storage</li>
-<li>Data collection</li>
-<li>Entering and checking data</li>
-<li>Reorganising data</li>
-<li>Calculation and analysis</li>
-<li>Publicatiion (internal or external)</li>
-<li>Long-term storage</li>
+<li>Randomisation gives the experiment validity</li>
+<li>Replication gives it power</li>
+<li>Randomisation must be at the level of the experimental unit</li>
+<li>Can the results be generalised?</li>
+<li>Is the experiment testing relevant treatments (e.g., stage 1 in breeding trials with densely planted trees of different genotypes, and hence P&amp;D susceptibilty, <em>versus</em> commerical situation with wider spacing all of the same level of P&amp;D tolerance/resistances, perhaps grown on rootstocks)</li>
+</ul>
+
+<h3 style="text-align: center; color: darkred; font-size: 1.2em;" markdown="1"> Beware of pseudo-replication </h3>
+
+
+</div>
+
+<div class="column column2 slideContent" >
+
+
+<h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
+Randomise y Replicate
+<h3 style="color: darkred; font-size: 1.2em;" markdown="1"> Tenga cuidado con la pseudo-replicaci&#243;n </h3>
+
+<p><h3 style="color: green;" markdown="1"></p>
+
+<ul>
+<li>La aleatorizaci&#243;n da la validez del experimento</li>
+<li>Replicaci&#243;n le da poder</li>
+<li>La aleatorizaci&#243;n debe estar al nivel de la unidad experimental</li>
+<li>&#191;Se pueden generalizar los resultados?</li>
+<li>&#191;Est&#225; experimentando el experimento los tratamientos relevantes (por ejemplo, etapa 1 en ensayos de cr&#237;a con &#225;rboles densamente plantados de diferentes genotipos, y por tanto P &amp; D susceptibilidad, <em>versus</em> situaci&#243;n commerical con mayor espaciamiento todos del mismo nivel de P &amp; D tolerancia (o resistencia), quiz&#225;s crecido en portainjertos)?</li>
+</ul>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>&quot;Common&quot; Designs</h3>
+<div class="column column1 slideContent" >
+<ul>
+<li>Completely randomised design (CRD)</li>
+<li>Randomised complete block (RCB)</li>
+<li>Row-column designs (e.g., Latin Square)</li>
+<li>Split-plot designs</li>
+<li>Balanced incomplete block designs (BIBD)
+
+<ul>
+<li>Can be resolvable</li>
+</ul></li>
+<li>Partially replicated (P-rep) designs</li>
+<li>Designs with uneven replication</li>
+<li>Two-stage designs</li>
+<li>Multi-environment trials</li>
 </ul>
 
 
@@ -933,44 +1000,23 @@ Datos BAIR
 
 
 <p><h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
-La cadena de datos
+Dise&#241;os &ldquo;comunes&rdquo;
 <h3 style="color: green;" markdown="1"></p>
 
 <ul>
-<li>Planificaci&#243;n de la investigaci&#243;n</li>
-<li>Planificar la recopilaci&#243;n y el almacenamiento de datos</li>
-<li>Recolecci&#243;n de datos</li>
-<li>Introducci&#243;n y comprobaci&#243;n de datos</li>
-<li>Reorganizaci&#243;n de datos</li>
-<li>C&#225;lculo y an&#225;lisis</li>
-<li>Publicaci&#243;n (interna o externa)</li>
-<li>Almacenamiento a largo plazo</li>
-</ul>
-
-</div>
-
-</section>
-<section data-transition="linear" data-transition-speed="default">
-<h3>Data collection and storage</h3>
-<div class="column column1 slideContent" >
-<ul>
-<li>For many projects, flat-files (i.e., Excel spreadsheets) are satisfactory if <a href="https://github.com/PlantandFoodResearch/BestPractices/blob/master/general/best_practices_excel_data_file.md">well used</a></li>
-<li>For projects with larger amounts of data from different sources (e.g., manually and automatically collected, using complex equipment) and intended to run over a number of years, <a href="https://en.wikipedia.org/wiki/Relational_database">relational databases</a>, using <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> are advisable (i.e., <strong>not</strong> MicroSoft Access).  <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> is becoming increasingly popular</li>
-</ul>
-
-
-</div>
-
-<div class="column column2 slideContent" >
-
-
-<p><h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
-Recolecci&#243;n y almacenamiento de datos
-<h3 style="color: green;" markdown="1"></p>
+<li>Dise&#241;o completamente al azar</li>
+<li>Bloques completos al azar</li>
+<li>Dise&#241;os de filas y columnas (por ejemplo, cuadrado latino)</li>
+<li>Dise&#241;os de parcelas divididas</li>
+<li>Dise&#241;os de bloques incompletos balanceados
 
 <ul>
-<li>Para muchos proyectos, los archivos planos (es decir, hojas de c&#225;lculo de Excel) son satisfactorios si <a href="https://github.com/PlantandFoodResearch/BestPractices/blob/master/general/best_practices_excel_data_file.md">bien utilizados</a></li>
-<li>Para proyectos con mayores cantidades de datos procedentes de diferentes fuentes (por ejemplo, recolectados manual y autom&#225;ticamente, utilizando equipos complejos) y destinados a funcionar durante varios a&#250;os, <a href="https://en.wikipedia.org/wiki/Relational_database">bases de datos relacionales</a>,  es aconsejable utilizar <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> (es decir, not MicroSoft Access).  <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> es cada vez m&#225;s popular</li>
+<li>Puede ser resoluble</li>
+</ul></li>
+<li>Parcialmente replicados dise&#241;os</li>
+<li>Dise&#241;os con replicaci&#243;n desigual</li>
+<li>Dise&#241;os de dos etapas</li>
+<li>Ensayos multiambiente</li>
 </ul>
 
 </div>
