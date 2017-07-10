@@ -32,7 +32,8 @@ _Translation usando Google_
 + [Introducci&#243;n a la administraci&#243;n de datos](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/DataManagementOverview.md) (presentaci&#243;n)
 + Gesti&#243;n de datos utilizando hojas de c&#225;lculo
     + [Presentaci&#243;n](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/DataManagementUsingSpreadsheets.md)
-    + [Ejercicio habilidades clave en Excel](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/SpreadsheetKeySkills.md) (tutorial)
+    + Ejercicio
++ [Habilidades clave en Excel](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/SpreadsheetKeySkills.md) (tutorial)
 
 #### Un taller de introducci&#243;n en R (~ día completo):
 + [Vista general R](https://github.com/PeterAlspach/Ecuador/blob/master/RNotes/ROverview.md) (presentaci&#243;n)
