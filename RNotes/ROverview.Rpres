@@ -10,6 +10,7 @@ font-family: "Times New Roman", Times, serif
 ...
 <h3 style="color: darkgreen; font-size: 1.7em;" markdown="1">
 R: visi&#243;n de conjunto
+
 ```{r, echo=FALSE, out.width='85%'}
 include_graphics('RLogo.jpg')
 ```
@@ -31,6 +32,7 @@ Why R?
 
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 &#191;Por qu&#233; R?
+
 <h3 style="color: green;" markdown="1">
 * R es libre y de c&#243;digo abierto
 * Se trata de un lenguaje con gui&#243;n y, por lo tanto, compatible con [investigaci&#243;n reproducible] (https://simplystatistics.org/2014/06/06/the-real-reason-reproducible-research-is-important/)
@@ -51,8 +53,10 @@ What's not to like?
 * [R-help](https://stat.ethz.ch/mailman/listinfo/r-help) can be a little brusque
 
 ***
+
 <h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
 &#191;Que es no gustar?
+
 <h3 style="color: green;" markdown="1">
 * Para algunos, es dif&#237;cil de aprender - especialmente si no tienen experiencia con un lenguaje con gui&#243;n
 * Hay una gran cantidad de cursos, documentaci&#243;n, paquetes, etc, puede ser dif&#237;cil encontrar el derecho
