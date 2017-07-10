@@ -32,6 +32,7 @@ Why R?
 &#191;Por qu&#233; R?
 
 <h3 style="color: green;" markdown="1">
+
 * R es libre y de c&#243;digo abierto
 * Se trata de un lenguaje con gui&#243;n y, por lo tanto, compatible con [investigaci&#243;n reproducible] (https://simplystatistics.org/2014/06/06/the-real-reason-reproducible-research-is-important/)
 * Tiene una gran comunidad de apoyo
@@ -56,6 +57,7 @@ What's not to like?
 &#191;Que es no gustar?
 
 <h3 style="color: green;" markdown="1">
+
 * Para algunos, es dif&#237;cil de aprender - especialmente si no tienen experiencia con un lenguaje con gui&#243;n
 * Hay una gran cantidad de cursos, documentaci&#243;n, paquetes, etc, puede ser dif&#237;cil encontrar el derecho
 * Es un lenguaje interpretado y puede ser un poco lento (por ejemplo, en el montaje de modelos mixtos complejos)
