@@ -12,7 +12,7 @@ Visi&#243;n general del dise&#241;o de experimentos
 Why is trial design important?
 ========================================================
 
-* The purpose of an experiment is to identify important effects and estimate their size (i.e., it is not simply hypothesis testing)
+* The purpose of an experiment is to identify important effects and estimate their size (i.e., it is not [simply hypothesis testing](http://www.nature.com/news/scientific-method-statistical-errors-1.14700))
 * Essential for valid results
 * Good trial design can
     + Lead to readily interpretable results
@@ -30,7 +30,7 @@ Why is trial design important?
 
 <h3 style="color: green;" markdown="1">
 
-+ El prop&#243;sito de un experimento es identificar efectos importantes y estimar su tama&#241;o (es decir, no es simplemente una prueba de hip&#243;tesis)
++ El prop&#243;sito de un experimento es identificar efectos importantes y estimar su tama&#241;o (es decir, no es [simplemente una prueba de hip&#243;tesis](http://www.nature.com/news/scientific-method-statistical-errors-1.14700))
 + Esencial para resultados v&#225;lidos
 * Buen dise&#241;o de prueba puede
     + Conducir a resultados f&#225;cilmente interpretables
