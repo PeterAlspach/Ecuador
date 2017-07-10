@@ -1,4 +1,4 @@
-# .gitignore
+.gitignore
 
 # R files (history etc)
 *.RData
