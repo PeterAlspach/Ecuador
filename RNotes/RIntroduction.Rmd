@@ -1,0 +1,177 @@
+---
+title: "Introduction to R"
+subtitle: "Notes for Ecuador workshops July-August 2017"
+author: "Peter Alspach"
+date: "July 2017"
+output:
+  html_document:
+  # html_notebook:
+    theme: spacelab
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+# knitr::opts_chunk$set(echo = TRUE, cache=TRUE, error = TRUE)
+knitr::opts_chunk$set(echo = TRUE, results = FALSE)
+```
+
+## Getting R and RStudio
+
+R is available from [CRAN](http://cran.espol.edu.ec/), and many packages are also available there.  Rstudio Desktop, open source, can be downloaded from [here](https://www.rstudio.com/products/rstudio/download/).  Unless your employer has restricted administration rights on your computer, it is simplest to install accepting the defaults.
+
+### Explore RStudio
++ The panes
+    + Code window (top left)
+    + Console (bottom left)
+    + Environment etc (top right)
+    + Files, plots, packages and help (bottom right)
++ Tools/Global Options...
++ Projects
+
+## R structure
+
+### Environments
+```{r search}
+search()
+```
+```{r ls}
+ls() # illustrate the TAB key here
+ls(pos=7)
+ls('package:stats')
+```
+### Working directory
+```{r wd}
+getwd()
+list.files()
+setwd('../DataManagement') # note: forward slash
+list.files()
+```
+
+### Packages
+
+By default R comes with a number of packages.  However, there are lots more (9000+) on [CRAN](http://cran.espol.edu.ec/) and elsewhere (e.g, [breedR](http://famuvie.github.io/breedR/), which breeders might be interested in installing).  One can also write packages, but this is beyond the scope of this introductory course.
+
+Once they have been installed they can be loaded onto the search path, either by checking the box in the RStudio Packages pane or `library(packageName)`.
+
+```{r lib}
+search()
+library(DiGGer)
+search() # DiGGer is now in the search path
+```
+### Getting help
++ The TAB key in RStudio
++ Search in the RStudio Help pane
++ `help(functionName)` or `?functionName`
+
+```{r help}
+help(ls)
+?ls
+```
+
++ Web-search your question (e.g., 'Fitting mixed models in R' or 'Change background in ggplot2')
++ [R-help](https://stat.ethz.ch/mailman/listinfo/r-help)
++ Ask a colleague or me (paalspach at gmail dot com)
+
+## Basics
+
+### Functions
+These do the work, and have `arguments` in round brackets () separate by commas.  If arguments are not explicitly names they are assumed to be in the order as specified in the help file (or using the TAB key).
+
+By default, the output from a function is printed in the console (graphs are produced in the Plots pane).  But the output can be saved to an R object using the assignment operator.
+
+### R objects
+This are vectors or lists.
+
+```{r obj}
+rm(list=ls()) # remove objects from the Global Environment (there probably aren't any)
+ls() # check that nothing is there
+c(1,3,4,7,2) # a vector with 5 integer elements is printed on the console window
+ls() # but not saved
+x <- c(1,3,4,7,2) # RStudio shortcut for the assignment operator is alt-
+ls() # there is now an obect call x
+ls.str() # this all gives the structure of the objects
+print(x) # to run the print method for the object
+x # shortcut for print(x)
+```
+
+## Working with data
+
+### Reading data
+There are lots of ways of getting data into R, but herein we concentrate on reading from a file with data.  In particular, text files and Excel spreadsheets.  Use `read.table` and its wrappers for text files.  For Excel spreadsheets, we will use the `readxl` package.
+
+```{r readxl}
+library(readxl)
+# ?read_excel
+examp3 <- read_excel('../DataManagement/ExerciseExample3.xls', 'Data', skip=7)
+ls.str() # this is a 'tibble' which I don't like so ...
+examp3 <- as.data.frame(examp3) # convert to a pure data.frame
+# examp3 <- as.data.frame(read_excel('../DataManagement/ExerciseExample3.xls',
+#                                    'Data', skip=7))
+str(examp3)
+```
+
+We can look at this using the Environment pane of RStudio or using R functions.
+
+```{r examp3.1}
+examp3
+head(examp3) # just the first few rows
+tail(examp3) # just the last few rows
+```
+### Accessing portions of the data
+
+```{r subset}
+dim(examp3) # 40 rows by 8 columns
+examp3[1,] # first row.  Note square brackets [] for subsetting
+examp3[1:3,] # first three rows
+# What about the first column?
+# Columns 2-4?
+# The element in the first row, third column?
+# Rows 1 and 3 (i.e., excluding 2)?
+examp3[,3]          # these are ...
+examp3[,'Cultivar'] # ... all the same ...
+examp3$Cultivar     # ... thing
+```
+
+### Summarising the data
+
+```{r summary}
+summary(examp3)
+table(examp3) # gives a 8-way cross table which is not what we want
+table(examp3[,3]) # that's better but a bit tedious for all columns
+apply(examp3, 2, table) # apply(), and related functions, are useful
+```
+
+### Conditional subsetting
+```{r condSubs}
+examp3[examp3$Cultivar=='Cask',]
+examp3[examp3$Wgt > 14,]
+# Missing values are special
+examp3[examp3$Wgt==NA,] # not what we want
+examp3[is.na(examp3$Wgt),] # that's better
+examp3[examp3$Wgt > 14 & !is.na(examp3$Wgt),]
+examp3[examp3$Cultivar=='Cask' | examp3$Cultivar=='County',] # | for or
+examp3[examp3$Cultivar %in% c('Cask','County'),]
+examp3[substring(examp3$Cultivar, 1, 1)=='C',]
+examp3[regexpr('[[:digit:]]', examp3$Cultivar)>0,]
+```
+
+The last few examples are getting complicated but illustrate what can be done.  In particular, it is worth understanding [regular expressions](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html)
+
+### Changing types
+
+### Editing values
+
+## The `tidyverse`
+
+## Base graphics
+
+### Scatterplot
+
+### Graphics parameters
+
+### `ggplot2`
+
+## Linear models
