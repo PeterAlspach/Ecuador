@@ -15,7 +15,7 @@ output:
 
 ```{r setup, include=FALSE}
 # knitr::opts_chunk$set(echo = TRUE, cache=TRUE, error = TRUE)
-knitr::opts_chunk$set(echo = TRUE, results = FALSE)
+knitr::opts_chunk$set(echo = TRUE, results = FALSE, error = TRUE)
 ```
 
 ## Getting R and RStudio
@@ -67,8 +67,8 @@ search() # DiGGer is now in the search path
 + `help(functionName)` or `?functionName`
 
 ```{r help}
-help(ls)
-?ls
+# help(ls)
+# ?ls
 ```
 
 + Web-search your question (e.g., 'Fitting mixed models in R' or 'Change background in ggplot2')
@@ -158,13 +158,75 @@ examp3[substring(examp3$Cultivar, 1, 1)=='C',]
 examp3[regexpr('[[:digit:]]', examp3$Cultivar)>0,]
 ```
 
-The last few examples are getting complicated but illustrate what can be done.  In particular, it is worth understanding [regular expressions](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html)
+The last few examples are getting complicated but illustrate what can be done.  In particular, it is worth understanding [regular expressions](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html) ([here's a cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)).
 
 ### Changing types
+```{r types1}
+str(examp3)
+```
+Currently, `Rep` is numeric whereas it really should be a factor variate.  That is, there is no reason to think of the value of Rep 1 as being half that of Rep 2.  They are just different categories.
+
+```{r types2}
+examp3$Rep <- as.factor(examp3$Rep)
+str(examp3)
+examp3$Rep
+```
+#### More about factors
+Factors are important, but they can be a little confusing.  A factor has values, levels and labels - although sometimes these can be the same thing.
+
+```{r factors}
+(tc <- rep(c('one','two','three'), 2))
+# The code above introduces two new features: the rep() function and the implied
+# print() call achieve by wrapping the entire line in brackets ().
+str(tc) # a character vector with 6 elements
+tc+1 # generates an error since addition makes no sense for character vectors
+levels(tc) # NULL since character vectors don't have levels
+as.numeric(tc) # all missing
+
+(tf <- as.factor(tc)) # by default levels are in alphabetical order of labels
+str(tf) # a factor with 3 levels
+tf+1 # generates an error 
+as.numeric(tf) # gives numbers, which are the level values (not level labels)
+
+(tf1 <- factor(tc, levels=c('one','two','three'))) # override alphabetical default
+as.numeric(tf1)
+
+(tf2 <- factor(tc, levels=c('one','two','three','four'))) # override alphabetical default
+tc[tc=='two'] <- 'four'
+tf[tf=='two'] <- 'four'
+tf1[tf1=='two'] <- 'four'
+tf2[tf2=='two'] <- 'four'
+data.frame(original=rep(c('one','two','three'), 2), tc=tc,
+           tf=tf, tf1=tf1, tf2=tf2, stringsAsFactors=FALSE)
+tf # still has 'two'ass a factor level even though it is no longer used
+factor(tf) # has dropped the unused factor level
+
+# Beware the following trap
+(trap <- factor(c(8.9, 9.8, 10.1)))
+as.numeric(trap) # gives the level values
+as.numeric(as.character(trap)) # by first converting to character this is avoided
+```
 
 ### Editing values
+As mentioned in the Data Management seminar, any editting of the raw data should be done using code so that it can be repeated (and the raw data is not corrupted).  We have already seen how to change individual values.  One might also wish to transform values.  For example, the code below adjusts the weight according to the moisture content^[Note: the information in the spreadsheet is not clear as to whether the Wgt is dry weight or wet weight, and whether moisture content is computed on a dry weight basis or wet weight basis].
 
-## The `tidyverse`
+```{r dw}
+examp3$DW <- examp3$Wgt/(1+examp3$Moist/100)
+examp3$DWtha <- 10*examp3$DW/(12.8*1.62) # should get plot size from spreadsheet
+head(examp3[,-c(1,8)])
+```
+
+#### The `tidyverse`
+
+Hadley Wickham (hadley\@rstudio.com) has contributed greatly to the R Community and thought a good deal about semantics and [tidying data](https://www.jstatsoft.org/index.php/jss/article/view/v059i10).  The packages he has created to facilitate tidying data are collectively known as the ['tidyverse'](http://tidyverse.org/).  These packages include `dplyr`, `magrittr`and `tidyr`.  The easiest way to get access is to install the entire tidyverse (`install.packages('tidyverse')`).
+
+This introduction does not cover the 'tidyverse', but it is well worth looking at the documentation and tutorials on the web. There are [various cheatsheets](https://www.rstudio.com/resources/cheatsheets/) maintained by RStudio.  Some of these have been translated into Spanish:
+
++ [Data import](https://github.com/rstudio/cheatsheets/raw/master/translations/spanish/data-import-cheatsheet_Spanish.pdf)
++ [Data wrangling](https://www.rstudio.com/wp-content/uploads/2015/03/data-wrangling-spanish.pdf)
++ Data visualisation using [ggplot2](https://www.rstudio.com/wp-content/uploads/2016/12/ggplot2-cheatsheet-2.1-Spanish.pdf)
++ [R markdown](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-spanish.pdf)
++ [Package development](https://www.rstudio.com/wp-content/uploads/2015/03/devtools-spanish.pdf), for more advanced users.
 
 ## Base graphics
 
@@ -173,5 +235,6 @@ The last few examples are getting complicated but illustrate what can be done.  
 ### Graphics parameters
 
 ### `ggplot2`
+This part of Hadley Wickham's contribution.  Many people prefer it over base graphs.  The [cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/12/ggplot2-cheatsheet-2.1-Spanish.pdf) should help you get started.
 
 ## Linear models

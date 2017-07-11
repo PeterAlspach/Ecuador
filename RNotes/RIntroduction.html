@@ -301,10 +301,8 @@ library(DiGGer)</code></pre>
 <li>Search in the RStudio Help pane</li>
 <li><code>help(functionName)</code> or <code>?functionName</code></li>
 </ul>
-<pre class="r"><code>help(ls)</code></pre>
-<pre><code>## starting httpd help server ...</code></pre>
-<pre><code>##  done</code></pre>
-<pre class="r"><code>?ls</code></pre>
+<pre class="r"><code># help(ls)
+# ?ls</code></pre>
 <ul>
 <li>Web-search your question (e.g., ‘Fitting mixed models in R’ or ‘Change background in ggplot2’)</li>
 <li><a href="https://stat.ethz.ch/mailman/listinfo/r-help">R-help</a></li>
@@ -383,17 +381,75 @@ examp3[examp3$Cultivar=='Cask' | examp3$Cultivar=='County',] # | for or
 examp3[examp3$Cultivar %in% c('Cask','County'),]
 examp3[substring(examp3$Cultivar, 1, 1)=='C',]
 examp3[regexpr('[[:digit:]]', examp3$Cultivar)&gt;0,]</code></pre>
-<p>The last few examples are getting complicated but illustrate what can be done. In particular, it is worth understanding <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html">regular expressions</a></p>
+<p>The last few examples are getting complicated but illustrate what can be done. In particular, it is worth understanding <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html">regular expressions</a> (<a href="https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf">here’s a cheatsheet</a>).</p>
 </div>
 <div id="changing-types" class="section level3">
 <h3>Changing types</h3>
+<pre class="r"><code>str(examp3)</code></pre>
+<p>Currently, <code>Rep</code> is numeric whereas it really should be a factor variate. That is, there is no reason to think of the value of Rep 1 as being half that of Rep 2. They are just different categories.</p>
+<pre class="r"><code>examp3$Rep &lt;- as.factor(examp3$Rep)
+str(examp3)
+examp3$Rep</code></pre>
+<div id="more-about-factors" class="section level4">
+<h4>More about factors</h4>
+<p>Factors are important, but they can be a little confusing. A factor has values, levels and labels - although sometimes these can be the same thing.</p>
+<pre class="r"><code>(tc &lt;- rep(c('one','two','three'), 2))
+# The code above introduces two new features: the rep() function and the implied
+# print() call achieve by wrapping the entire line in brackets ().
+str(tc) # a character vector with 6 elements
+tc+1 # generates an error since addition makes no sense for character vectors</code></pre>
+<pre><code>## Error in tc + 1: non-numeric argument to binary operator</code></pre>
+<pre class="r"><code>levels(tc) # NULL since character vectors don't have levels
+as.numeric(tc) # all missing</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>(tf &lt;- as.factor(tc)) # by default levels are in alphabetical order of labels
+str(tf) # a factor with 3 levels
+tf+1 # generates an error </code></pre>
+<pre><code>## Warning in Ops.factor(tf, 1): '+' not meaningful for factors</code></pre>
+<pre class="r"><code>as.numeric(tf) # gives numbers, which are the level values (not level labels)
+
+(tf1 &lt;- factor(tc, levels=c('one','two','three'))) # override alphabetical default
+as.numeric(tf1)
+
+(tf2 &lt;- factor(tc, levels=c('one','two','three','four'))) # override alphabetical default
+tc[tc=='two'] &lt;- 'four'
+tf[tf=='two'] &lt;- 'four'</code></pre>
+<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`, tf == &quot;two&quot;, value = &quot;four&quot;): invalid
+## factor level, NA generated</code></pre>
+<pre class="r"><code>tf1[tf1=='two'] &lt;- 'four'</code></pre>
+<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`, tf1 == &quot;two&quot;, value = &quot;four&quot;): invalid
+## factor level, NA generated</code></pre>
+<pre class="r"><code>tf2[tf2=='two'] &lt;- 'four'
+data.frame(original=rep(c('one','two','three'), 2), tc=tc,
+           tf=tf, tf1=tf1, tf2=tf2, stringsAsFactors=FALSE)
+tf # still has 'two'ass a factor level even though it is no longer used
+factor(tf) # has dropped the unused factor level
+
+# Beware the following trap
+(trap &lt;- factor(c(8.9, 9.8, 10.1)))
+as.numeric(trap) # gives the level values
+as.numeric(as.character(trap)) # by first converting to character this is avoided</code></pre>
+</div>
 </div>
 <div id="editing-values" class="section level3">
 <h3>Editing values</h3>
+<p>As mentioned in the Data Management seminar, any editting of the raw data should be done using code so that it can be repeated (and the raw data is not corrupted). We have already seen how to change individual values. One might also wish to transform values. For example, the code below adjusts the weight according to the moisture content<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
+<pre class="r"><code>examp3$DW &lt;- examp3$Wgt/(1+examp3$Moist/100)
+examp3$DWtha &lt;- 10*examp3$DW/(12.8*1.62) # should get plot size from spreadsheet
+head(examp3[,-c(1,8)])</code></pre>
+<div id="the-tidyverse" class="section level4">
+<h4>The <code>tidyverse</code></h4>
+<p>Hadley Wickham (hadley@rstudio.com) has contributed greatly to the R Community and thought a good deal about semantics and <a href="https://www.jstatsoft.org/index.php/jss/article/view/v059i10">tidying data</a>. The packages he has created to facilitate tidying data are collectively known as the <a href="http://tidyverse.org/">‘tidyverse’</a>. These packages include <code>dplyr</code>, <code>magrittr</code>and <code>tidyr</code>. The easiest way to get access is to install the entire tidyverse (<code>install.packages('tidyverse')</code>).</p>
+<p>This introduction does not cover the ‘tidyverse’, but it is well worth looking at the documentation and tutorials on the web. There are <a href="https://www.rstudio.com/resources/cheatsheets/">various cheatsheets</a> maintained by RStudio. Some of these have been translated into Spanish:</p>
+<ul>
+<li><a href="https://github.com/rstudio/cheatsheets/raw/master/translations/spanish/data-import-cheatsheet_Spanish.pdf">Data import</a></li>
+<li><a href="https://www.rstudio.com/wp-content/uploads/2015/03/data-wrangling-spanish.pdf">Data wrangling</a></li>
+<li>Data visualisation using <a href="https://www.rstudio.com/wp-content/uploads/2016/12/ggplot2-cheatsheet-2.1-Spanish.pdf">ggplot2</a></li>
+<li><a href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-spanish.pdf">R markdown</a></li>
+<li><a href="https://www.rstudio.com/wp-content/uploads/2015/03/devtools-spanish.pdf">Package development</a>, for more advanced users.</li>
+</ul>
 </div>
 </div>
-<div id="the-tidyverse" class="section level2">
-<h2>The <code>tidyverse</code></h2>
 </div>
 <div id="base-graphics" class="section level2">
 <h2>Base graphics</h2>
@@ -405,10 +461,17 @@ examp3[regexpr('[[:digit:]]', examp3$Cultivar)&gt;0,]</code></pre>
 </div>
 <div id="ggplot2" class="section level3">
 <h3><code>ggplot2</code></h3>
+<p>This part of Hadley Wickham’s contribution. Many people prefer it over base graphs. The <a href="https://www.rstudio.com/wp-content/uploads/2016/12/ggplot2-cheatsheet-2.1-Spanish.pdf">cheatsheet</a> should help you get started.</p>
 </div>
 </div>
 <div id="linear-models" class="section level2">
 <h2>Linear models</h2>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Note: the information in the spreadsheet is not clear as to whether the Wgt is dry weight or wet weight, and whether moisture content is computed on a dry weight basis or wet weight basis<a href="#fnref1">↩</a></p></li>
+</ol>
 </div>
 
 
