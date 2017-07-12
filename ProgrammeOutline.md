@@ -24,6 +24,7 @@ The plan is to run two 2-day works at each of two sites (Quito and the coast), a
 Two key themes of the workshops will be 'reproducible research'and çollaboration'.  As part of this, all workshop notes will be made available on github
 
 At the end of the workshops, participants should be:
+
 * Familiar with the importance of reproducible research
 * Understand the importance of managing data well
 * Be able to explore data using R and Excel
