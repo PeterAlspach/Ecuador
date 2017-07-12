@@ -14,8 +14,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-# knitr::opts_chunk$set(echo = TRUE, cache=TRUE, error = TRUE)
-knitr::opts_chunk$set(echo = TRUE, results = FALSE, error = TRUE)
+# knitr::opts_chunk$set(echo=TRUE, cache=TRUE, error=TRUE)
+knitr::opts_chunk$set(echo=TRUE, results=FALSE, cache=TRUE, error=TRUE)
 ```
 
 ## Getting R and RStudio
@@ -52,7 +52,7 @@ list.files()
 
 ### Packages
 
-By default R comes with a number of packages.  However, there are lots more (9000+) on [CRAN](http://cran.espol.edu.ec/) and elsewhere (e.g, [breedR](http://famuvie.github.io/breedR/), which breeders might be interested in installing).  One can also write packages, but this is beyond the scope of this introductory course.
+By default R comes with a number of packages.  However, there are lots more (9000+) on [CRAN](http://cran.espol.edu.ec/) and elsewhere (e.g., [breedR](http://famuvie.github.io/breedR/), which breeders might be interested in installing).  One can also write packages, but this is beyond the scope of this introductory course.
 
 Once they have been installed they can be loaded onto the search path, either by checking the box in the RStudio Packages pane or `library(packageName)`.
 
@@ -78,7 +78,7 @@ search() # DiGGer is now in the search path
 ## Basics
 
 ### Functions
-These do the work, and have `arguments` in round brackets () separate by commas.  If arguments are not explicitly names they are assumed to be in the order as specified in the help file (or using the TAB key).
+These do the work, and have `arguments` in round brackets () separate by commas.  If arguments are not explicitly named they are assumed to be in the order as specified in the help file (or using the TAB key).  R is object oriented, which means that what a function does depends on the nature of the object upon which it is operating (see later).
 
 By default, the output from a function is printed in the console (graphs are produced in the Plots pane).  But the output can be saved to an R object using the assignment operator.
 
@@ -139,7 +139,7 @@ examp3$Cultivar     # ... thing
 
 ```{r summary}
 summary(examp3)
-table(examp3) # gives a 8-way cross table which is not what we want
+# table(examp3) # gives a 8-way cross table which is not what we want
 table(examp3[,3]) # that's better but a bit tedious for all columns
 apply(examp3, 2, table) # apply(), and related functions, are useful
 ```
@@ -198,7 +198,7 @@ tf1[tf1=='two'] <- 'four'
 tf2[tf2=='two'] <- 'four'
 data.frame(original=rep(c('one','two','three'), 2), tc=tc,
            tf=tf, tf1=tf1, tf2=tf2, stringsAsFactors=FALSE)
-tf # still has 'two'ass a factor level even though it is no longer used
+tf # still has 'two' as a factor level even though it is no longer used
 factor(tf) # has dropped the unused factor level
 
 # Beware the following trap
@@ -228,13 +228,131 @@ This introduction does not cover the 'tidyverse', but it is well worth looking a
 + [R markdown](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-spanish.pdf)
 + [Package development](https://www.rstudio.com/wp-content/uploads/2015/03/devtools-spanish.pdf), for more advanced users.
 
+### Writing or saving data
+
+When leaving R, one can save the `workspace`.  That is, all objects in the Global Environment.  This is generally not advisable.  However sometimes it is good to save some objects (perhaps output from a model that took a few hours to fit).
+
+```{r save}
+# save(RObj1, RObj2, ..., file='myObjects.RData')
+# load('myObjects.RData')
+```
+
+The resulting file, myObjects.RData, retains the structure of the R objects (which is good) but is not readily interoperable using other software (which is bad).  The base R function for writing a flat table as a text file is `write.table` and there are also packages for writing Excel files.
+
+```{r writing}
+filePath <- '../RNotes'
+filename <- paste0(filePath, '/Example3')
+
+write.table(examp3, paste0(filename, '.txt'), sep='\t', na='*')
+
+library(openxlsx) # if not installed get from CRAN
+# installr::install.rtools() # requires installr from CRAN.  Takes about 10-15 minutes
+write.xlsx(examp3, paste0(filename, '.xlsx'), sheetName='Example3 from openxlsx',
+           keepNA=TRUE, firstRow=TRUE)
+```
+
+Creating and writing to Excel files requires extra software (in the case of `openxlsx` this is RTools) which entails some extra hassle if it is not already installed.
+
 ## Base graphics
 
-### Scatterplot
+Characteristics of a good scientific graph include
+
+* Accurate representation of the data
+* Clarity
+* Appropriate use of colours
+* Maximised information to ink ratio (i.e., not chart junk)
+* It tells a good story (better than can be done with words or a table)
+
+Base R has lots of graphics features, and there are lots of packages for further extending visualisation (including interactive graphics).
+
+```{r pkgGraphics}
+ls('package:graphics')
+```
+
+Note the different variants of some of these functions (e.g., `plot.default`, `plot.function` and so on).  Which is actually called when one issues a `plot` call depends on the nature of the object.
+
+```{r ooPlot}
+plot(examp3$Maturity, examp3$DW)
+plot(factor(examp3$Maturity), examp3$DW)
+```
 
 ### Graphics parameters
+The appearance of the graphs can be adjusted using the graphics parameters (`par()` will show the current parameters).  One can adjust margin size, axes and labels appearance, the number of plots on a page (although for greater flexibility one needs to use `layout()`), and many other aspects.  Some of these will be illustrated in what follows.
+
+### Scatterplot
+We will explore graphically whether there is a relationship between weight and height.
+
+```{r scatPlot, fig.height=10}
+par(mfrow=c(2,1))
+plot(examp3$Height, examp3$DW, xlab='Plant height (cm)', ylab='Yield (DW kg/plot)',
+     pch=16)
+par(mgp=c(2, 0.8, 0), font.axis=3, font.lab=8)
+plot(jitter(examp3$Height, 0.2), examp3$DW, xlab='Plant height (cm)', ylab='Yield (DW kg/plot)',
+     pch=16, col=colorRampPalette(c('pink', 'darkred'))(3)[examp3$Maturity])
+```
+
+The code above illustrates a small fraction of the possibilies.  Note
+
+* `par` adjustments were
+    * `mfrow` (__m__ ultiple __f__ rames by __row__) to give a plot window with 2 rows and 1 column
+    * `mgp` (__m__ argin __g__ raphics __p__ arameters) to adjust the position of the axes labels
+    * `font.axis` and `font.lab` to adjust the font of the axes titles and labels (one would not usually choose these particular fonts)
+* The `plot` refinements include
+    * `xlab` and `ylab` to label the axes.  `main` would give the plot a title
+    * `pch` (__p__ lotting __ch__ aracter) to choose the point style. `cex` (__c__ haracter __ex__ tension) would change the size
+    * `col` to change the colour of the points, in this case to reflect the maturity score.  The `colorRampPalette` function is useful when one wants the colour to reflect a numeric or ordinal variate
+    * `jitter` to add a bit of (horizontal) noise to reduce the overlap of points
 
 ### `ggplot2`
 This part of Hadley Wickham's contribution.  Many people prefer it over base graphs.  The [cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/12/ggplot2-cheatsheet-2.1-Spanish.pdf) should help you get started.
 
 ## Linear models
+
+### Analysis of variance
+If the design is balanced with no missing plots or covariates, using `aov` to fit the linear model has some advantages in terms of ease of use.  However, when this is not the case (i.e., most practical situations) `lm` is generally used
+
+```{r aov, results=TRUE, fig.height=8}
+par(mfrow=c(2,2))
+examp3$Cultivar <- factor(examp3$Cultivar)
+ex3AOV <- aov(DW~Maturity*Cultivar+Rep, data=examp3)
+plot(ex3AOV)
+anova(ex3AOV)
+```
+
+### Regression
+
+```{r lm, results=TRUE, fig.height=8}
+par(mfrow=c(2,2))
+ex3LM <- lm(DW~Maturity*Cultivar+Rep, data=examp3)
+plot(ex3LM)
+anova(ex3LM)
+
+ex3LM <- lm(DW~Maturity+Cultivar+Rep, data=examp3)
+plot(ex3LM)
+anova(ex3LM)
+ND <- expand.grid(Cultivar=levels(examp3$Cultivar), Rep=1:4, Maturity=1:3)
+ND$Rep <- factor(ND$Rep)
+lmPred <- predict(ex3LM, newdata=ND, se=TRUE)
+ND$pred <- lmPred$fit
+ND$se <- lmPred$se.fit
+
+par(mfrow=c(1,1))
+plot(tapply(examp3$DW, examp3$Cultivar, mean, na.rm=TRUE),
+     tapply(ND$pred, ND$Cultivar, mean, na.rm=TRUE),#lmPred$fit,
+     xlab='Simple cultivar mean', ylab='LM predictions',
+     panel.first=abline(0, 1, col='brown', lty='dashed'))
+
+```
+
+### Linear mixed models
+These models are more complex, but are better for unbalanced data (either due to design, missing values, or other circumstance).  The main R package for fitting them is [lme4](https://cran.r-project.org/web/packages/lme4/index.html) which has an [large manual](https://cran.r-project.org/web/packages/lme4/lme4.pdf) and several vignettes, [one of which](https://cran.r-project.org/web/packages/lme4/lme4.pdf) is similar to the [2015 paper in JSS](https://www.jstatsoft.org/article/view/v067i01/v67i01.pdf).
+
+## Other possible topics
+If time permits we might also cover
+
+* The `apply` series of functions
+* Writing functions
+* More about markdown
+* Using git and github for collabortive research
+* Generalised linear models (`glm`) which are particularly useful for binomial (presence/absence) and count data
+* `breedR`
