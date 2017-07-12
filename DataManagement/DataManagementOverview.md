@@ -23,10 +23,10 @@ Why is data management important?
     
 ***
 
-<h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
+<h3 style="color: darkgreen; font-size: 1.2em;" markdown="1">
 El manejo de datos es importante
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em;" markdown="1">
 
 + Los datos son un activo importante para INIAP y usted como investigador
 + Una buena gesti&#x00F3;n de datos puede
@@ -42,15 +42,15 @@ What is data?
 * It is __not__ just the numbers collected
 * It includes
     + Trial protocol (e.g., researchers, treatments, trial design, field plan, sample layout, units of measurement, and so on)
-    + Trial history (e.g., when measurements were collected, what went on, weather, __audit trail__ of data)
+    + Trial history (e.g., when and what, weather, __audit trail__ of data)
 * Meta-data
 
 ***
 
-<h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
+<h3 style="color: darkgreen; font-size: 1.2em;" markdown="1">
 &#191;Qu&#233; son los datos?
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em;" markdown="1">
 
 + No son s&#243;lo los n&#250;meros recolectados
 + Incluye
@@ -94,10 +94,10 @@ The data-chain
 
 ***
 
-<h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
+<h3 style="color: darkgreen; font-size: 1.2em" markdown="1">
 La cadena de datos
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em" markdown="1">
 
 + Planificaci&#243;n de la investigaci&#243;n
 + Planificar la recopilaci&#243;n y el almacenamiento de datos
@@ -116,10 +116,10 @@ Data collection and storage
 
 ***
 
-<h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
+<h3 style="color: darkgreen; font-size: 1.2em" markdown="1">
 Recolecci&#243;n y almacenamiento de datos
 
-<h3 style="color: green;" markdown="1">
+<h3 style="color: green; font-size: 0.9em" markdown="1">
 
 + Para muchos proyectos, los archivos planos (es decir, hojas de c&#225;lculo de Excel) son satisfactorios si [bien utilizados](https://github.com/PlantandFoodResearch/BestPractices/blob/master/general/best_practices_excel_data_file.md)
-+ Para proyectos con mayores cantidades de datos procedentes de diferentes fuentes (por ejemplo, recolectados manual y autom&#225;ticamente, utilizando equipos complejos) y destinados a funcionar durante varios a&#250;os, [bases de datos relacionales](https://en.wikipedia.org/wiki/Relational_database),  es aconsejable utilizar [SQL] (https://en.wikipedia.org/wiki/SQL) (es decir, not MicroSoft Access).  [NoSQL](https://en.wikipedia.org/wiki/NoSQL) es cada vez m&#225;s popular
++ Para proyectos con mayores cantidades de datos procedentes de diferentes fuentes y destinados a funcionar durante varios a&#250;os, [bases de datos relacionales](https://en.wikipedia.org/wiki/Relational_database),  es aconsejable utilizar [SQL] (https://en.wikipedia.org/wiki/SQL) (es decir, not MicroSoft Access).  [NoSQL](https://en.wikipedia.org/wiki/NoSQL) es cada vez m&#225;s popular

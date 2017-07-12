@@ -44,7 +44,7 @@ Setting up a sheet (1)
 
 * Using, and creating, templates (_Templates_)
 * Keeping row and column titles visible (_Freeze panes_)
-* Filling blank cells with the value above
+* Relating tables (_Formulae_ vlookup)
 * Calculating a repeating list of values (_Formulae_)
 
 ***
@@ -56,7 +56,7 @@ Configuraci&#x00F3;n de una hoja (1)
 
 + Utilizando, y creando, plantillas (_Plantillas_)
 + Mantener los t&#x00ED;tulos de filas y columnas visibles (_congelar paneles_)
-+ Rellenar celdas en blanco con el valor anterior
++ Relaci&#243;n de tablas (_F&#x00F3;rmulas_ vlookup)
 + C&#x00E1;lculo de una lista repetida de valores (_F&#x00F3;rmulas_)
 
 Setting up a sheet (2)
@@ -80,7 +80,7 @@ Configuraci&#x00F3;n de una hoja (2)
 Data checking
 ========================================================
 * Validating data as it is entered (_Data validation_)
-* Formulae for data checking (_Formulae_)
+* Formulae for data checking (_Formulae_ min, max, if)
 * Highlight unusual values
     * Validating data already entered (_Data validation_)
     * Using formats (_Conditional formatting_)
@@ -88,13 +88,13 @@ Data checking
 
 ***
 
-<h3 style="color: darkgreen; font-size: 1.5em" markdown="1">
+<h3 style="color: darkgreen; font-size: 1.2em" markdown="1">
 Comprobaci&#x00F3;n de datos
 
 <h3 style="color: green; font-size: 0.9em;" markdown="1">
 
 + Validaci&#x00F3;n de datos a medida que se ingresa (_Validaci&#x00F3;n de datos_)
-+ F&#x00F3;rmulas para el control de datos (_F&#x00F3;rmulas_)
++ F&#x00F3;rmulas para el control de datos (_F&#x00F3;rmulas_ min, max, if)
 + Enfatizar valores inusuales
     + Validar datos ya ingresados (_Validaci&#x00F3;n de datos_)
     + Uso de formatos (_Formato condicional_)
