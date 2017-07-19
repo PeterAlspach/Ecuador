@@ -9,6 +9,11 @@ bbTrich <- as.data.frame(bbTrich)
 plot(as.numeric(factor(bbTrich$Localidad)), # have to convert the localities to numbers
      bbTrich$Yield,
      col=factor(bbTrich$Treatment)) # convert treatments to factors to use col
+
+# points(1.5, 20000, pch=16, col=1, cex=1.2)
+# points(1.5, 18000, pch=16, col=2, cex=1.4)
+# points(1.5, 16000, pch=16, col=3, cex=1.8)
+
 # Plot with better labels
 plot(as.numeric(factor(bbTrich$Localidad)),
      bbTrich$Yield,
