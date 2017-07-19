@@ -216,3 +216,17 @@ Dise&#241;os "comunes" (2)
 + Dise&#241;os con replicaci&#243;n desigual
 + Dise&#241;os de dos etapas
 + Ensayos multiambiente
+
+Multiple comparisons
+=========================================================
+
+* Not recommended [Saville, The American Statistician (1990) 44:174-180](http://www.soph.uab.edu/Statgenetics/People/MBeasley/Courses/Saville-MultipleComparionsPracticalSolution-1990.pdf)
+
+***
+
+<h3 style="color: darkgreen; font-size: 1.2em" markdown="1">
+Comparaciones multiples
+
+<h3 style="color: green; font-size: 0.9em" markdown="1">
+
++ No recomendado [Saville, The American Statistician (1990) 44:174-180](http://www.soph.uab.edu/Statgenetics/People/MBeasley/Courses/Saville-MultipleComparionsPracticalSolution-1990.pdf)
