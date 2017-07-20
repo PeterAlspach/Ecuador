@@ -240,8 +240,8 @@ div.tocify {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>CRAN contains a number of trial design software packages (e.g., <a href="http://cran.espol.edu.ec/web/packages/dae/index.html">dae</a>), but <a href="http://www.austatgen.org/software/"><code>DiGGer</code></a><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> is particularly good for breeding trials. It is available both as a stand-alone executable and as an R-package. Herein we discuss R package version 1.0.1.</p>
-<p><code>DiGGer</code> is capable of a wide range of designs, some of which are discussed in the <a href="https://iplant.plantandfood.co.nz/biometrics/Documents/DiGGerQuickGuide.pdf">‘Quick Guide’</a> for the R package which comes with the software (but unfortunately not as a vignette). In particular, the initial swap matrix (see the ‘Dummy example’ in the ‘Seedlings’ section below for a simple example) gives <code>DiGGer</code> enormous flexibility to deal with non-rectangular blocks, gaps due to existing plants or other structures, alternative blocking criteria (e.g., one might wish to block an experiment on existing trees according to some characterisitics of those trees, such as size or disease status, rather than location) and so on. The text herein is not intended to replicate the ‘Quick Guide’, but rather to illustrate how <code>DiGGer</code> can be used for some of the common situations that have arisen in my experience in fruit breeding.</p>
+<p>CRAN contains a number of trial design software packages (e.g., <a href="http://cran.espol.edu.ec/web/packages/dae/index.html">dae</a>), but <a href="http://nswdpibiom.org/austatgen/software/"><code>DiGGer</code></a> is particularly good for breeding trials. It is available both as a stand-alone executable and as an R-package. Herein we discuss R package version 1.0.1.</p>
+<p><code>DiGGer</code> is capable of a wide range of designs, some of which are discussed in the Quick Guide for the R package which comes with the software (but unfortunately not as a vignette). In particular, the initial swap matrix (see the ‘Dummy example’ in the ‘Seedlings’ section below for a simple example) gives <code>DiGGer</code> enormous flexibility to deal with non-rectangular blocks, gaps due to existing plants or other structures, alternative blocking criteria (e.g., one might wish to block an experiment on existing trees according to some characterisitics of those trees, such as size or disease status, rather than location) and so on. The text herein is not intended to replicate the ‘Quick Guide’, but rather to illustrate how <code>DiGGer</code> can be used for some of the common situations that have arisen in my experience in fruit breeding.</p>
 <p>After <code>DiGGer</code> has created the design, guard plants (and perhaps rows) may be added. Ensure that the spreadsheet for the trial contains a worksheet with the field plan, and another with the code used to create it (or a link to the code). Since there is generally a bit of manual manipulation involved in creating the plan, it is a good idea to finish with a sanity check involving reading the plan back into R and checking that the numbers match.</p>
 </div>
 <div id="preliminaries" class="section level2">
@@ -418,7 +418,7 @@ desPlot(planDiG, bdef=cbind(nTrts,1), bcol='red4', new=FALSE)</code></pre>
 <ul>
 <li><code>ibDiGGer</code> is the wrapper for incomplete block designs. <code>rowsInBlock</code>=11 and <code>columnsInBlock</code>=1; i.e., the incomplete blocks of 11 plots are all in one row. Setting <code>rowsInReplicate</code> and <code>columnsInReplicate</code> ensures the design is resolvable</li>
 <li><code>getConcurrence</code> shows the number of pairs of treatments which don’t occur together in any incomplete block (1515), those that occur in only one incomplete block (600) and those that occur in two incomplete blocks (30). These should add up to (66<sup>2</sup>-66)/2 = 2145, which they do</li>
-<li>Ideally the concurrences would be just 0 or 1. It is possible to continue the search using <code>desDiG &lt;- run(desDiG, continue=TRUE)</code> and/or do a more thorough search by increasing the maximum number of interchanges (include <code>maxInterchanges=1000000</code> in the original call to <code>ibDiGGer</code>; the default is 100000)<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></li>
+<li>Ideally the concurrences would be just 0 or 1. It is possible to continue the search using <code>desDiG &lt;- run(desDiG, continue=TRUE)</code> and/or do a more thorough search by increasing the maximum number of interchanges (include <code>maxInterchanges=1000000</code> in the original call to <code>ibDiGGer</code>; the default is 100000)<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></li>
 <li>The matrix representation of the design to plot is got ‘manually’ be retrieving the <code>dlist</code> element of <code>desDiG</code> and pasting the name, rep and block columns together as name:rep.blk. These are then plotted using <code>desPlot</code>.</li>
 </ul>
 </div>
@@ -551,9 +551,9 @@ desPlot(planDiG, trts='R14.41', col='blue3', new=FALSE)</code></pre>
 <li>Assing LocationCodes</li>
 </ul>
 <p><em>Allocate checks</em><br />
-This will depend on how many checks there are, and whether they are all of one cultivar. One might simply chose a random plot in each row and assign the second plant to be a check<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. Alternatively, at an earlier stage one might have kept a number of plots with only 4 plants, and then completed these with checks. In this particular case that would have created an extra 5 plots. This is at least partly the approach I usually take.</p>
+This will depend on how many checks there are, and whether they are all of one cultivar. One might simply chose a random plot in each row and assign the second plant to be a check<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. Alternatively, at an earlier stage one might have kept a number of plots with only 4 plants, and then completed these with checks. In this particular case that would have created an extra 5 plots. This is at least partly the approach I usually take.</p>
 <p><em>Left over plants</em><br />
-I generally leave these for the breeder to deal with. Sometimes they simply discard them, or keep them for replants; other times they fill in the ends of rows<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+I generally leave these for the breeder to deal with. Sometimes they simply discard them, or keep them for replants; other times they fill in the ends of rows<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 <p><em>LocationCodes</em><br />
 Sometimes the breeder/technician will do this themselves, but other times I do so. It could be done at the time of design, but I usually wait until after planting so that any left over plants which were planted, or mistakes made, can be accommodated.</p>
 </div>
@@ -646,10 +646,9 @@ desPlot(ttDes, trts=6, col='lightBlue', new=FALSE)</code></pre>
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>At the time of writing this site appears to be down<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>I don’t usually bother too much if the A-measure is stable as when the trail is actually planted there are generally tree deaths and/or all plots are not recorded since it quickly becomes obvious the some are not up to standard.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>I don’t usually use the first plant as this might be next to a post and thus potentially unusual.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>If breeders plant by machine the rows are generally of different lengths.<a href="#fnref4">↩</a></p></li>
+<li id="fn1"><p>I don’t usually bother too much if the A-measure is stable as when the trail is actually planted there are generally tree deaths and/or all plots are not recorded since it quickly becomes obvious the some are not up to standard.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>I don’t usually use the first plant as this might be next to a post and thus potentially unusual.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>If breeders plant by machine the rows are generally of different lengths.<a href="#fnref3">↩</a></p></li>
 </ol>
 </div>
 
