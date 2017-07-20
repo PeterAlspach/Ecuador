@@ -56,7 +56,7 @@ Configuraci&#x00F3;n de una hoja (1)
 
 + Utilizando, y creando, plantillas (_Plantillas_)
 + Mantener los t&#x00ED;tulos de filas y columnas visibles (_congelar paneles_)
-+ Relaci&#243;n de tablas (_F&#x00F3;rmulas_ vlookup)
++ Relaci&#243;n de tablas (_F&#x00F3;rmulas_ buscarv)
 + C&#x00E1;lculo de una lista repetida de valores (_F&#x00F3;rmulas_)
 
 Setting up a sheet (2)
