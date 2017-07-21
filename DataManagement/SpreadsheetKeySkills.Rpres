@@ -56,7 +56,7 @@ Configuraci&#x00F3;n de una hoja (1)
 
 + Utilizando, y creando, plantillas (_Plantillas_)
 + Mantener los t&#x00ED;tulos de filas y columnas visibles (_congelar paneles_)
-+ Relaci&#243;n de tablas (_F&#x00F3;rmulas_ buscarv)
++ Relaci&#243;n de tablas (_F&#x00F3;rmulas_ buscarv, or consultav)
 + C&#x00E1;lculo de una lista repetida de valores (_F&#x00F3;rmulas_)
 
 Setting up a sheet (2)
@@ -94,7 +94,7 @@ Comprobaci&#x00F3;n de datos
 <h3 style="color: green; font-size: 0.9em;" markdown="1">
 
 + Validaci&#x00F3;n de datos a medida que se ingresa (_Validaci&#x00F3;n de datos_)
-+ F&#x00F3;rmulas para el control de datos (_F&#x00F3;rmulas_ min, max, if)
++ F&#x00F3;rmulas para el control de datos (_F&#x00F3;rmulas_ min, max, si)
 + Enfatizar valores inusuales
     + Validar datos ya ingresados (_Validaci&#x00F3;n de datos_)
     + Uso de formatos (_Formato condicional_)
