@@ -89,7 +89,7 @@ The data-chain
 * Entering and checking data
 * Reorganising data
 * Calculation and analysis
-* Publicatiion (internal or external)
+* Publication (internal or external)
 * Long-term storage
 
 ***
