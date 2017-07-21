@@ -1,0 +1,17 @@
+---
+title: "Homework"
+subtitle: "Exercises for post-workshop practice"
+author: "Peter Alspach"
+date: "21 July 2017"
+output: html_document
+---
+
+## Data management
+
+['HomeworkExerciseExcel'](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/HomeworkExerciseExcel.xls) is an Excel worksheet with some data.  Re-organise this so that it adheres to the [best practices](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/DataManagementUsingSpreadsheets.html) outlined during the workshop.  Where there is insufficient information, provide a space and indicate that the information is missing.
+
+## R analysis
+
+['HomeworkExerciseR'](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/HomeworkExerciseR.xls) provides artificial data on an imaginery trial.  Analyse this trial using R and write a few sentences on what you conclude from the results.
+
+What was the correlation between fruit weight and yield?
