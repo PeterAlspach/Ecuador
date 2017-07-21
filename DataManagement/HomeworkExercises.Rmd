@@ -15,3 +15,18 @@ output: html_document
 ['HomeworkExerciseR'](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/HomeworkExerciseR.xls) provides artificial data on an imaginery trial.  Analyse this trial using R and write a few sentences on what you conclude from the results.
 
 What was the correlation between fruit weight and yield?
+
+
+<h3 style="color: darkgreen; font-size: 1.7em;" markdown="1">
+Ejercicios de tareas para la pr&#225;ctica posterior al taller
+
+<h3 style="color: darkgreen; font-size: 1.1em;" markdown="1">
+### Gesti&#243;n de datos
+
+['HomeworkExerciseExcel'](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/HomeworkExerciseExcel.xls) es una hoja de c&#225;lculo de Excel con algunos datos. Reorganice esto para que se adhiera a las [mejores pr&#225;cticas](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/DataManagementUsingSpreadsheets.html) resumidas durante el taller. Donde no hay suficiente informaci&#243;n, proporcione un espacio e indique que falta la informaci&#243;n.
+
+### R an&#225;lisis
+
+['HomeworkExerciseR'](https://github.com/PeterAlspach/Ecuador/blob/master/DataManagement/HomeworkExerciseR.xls) proporciona datos artificiales en un ensayo de imaginería. Analice este ensayo usando R y escriba unas frases sobre lo que concluye de los resultados.
+
+&#191;Cu&#225;l fue la correlaci&#243;n entre el peso y el rendimiento de la fruta?</h3>
