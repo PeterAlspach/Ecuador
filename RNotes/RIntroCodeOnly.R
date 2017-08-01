@@ -159,6 +159,7 @@ plot(jitter(examp3$Height, 0.2), examp3$DW, xlab='Plant height (cm)', ylab='Yiel
 ## R aov, results=TRUE, fig.height=8
 par(mfrow=c(2,2))
 examp3$Cultivar <- factor(examp3$Cultivar)
+examp3$Rep <- factor(examp3$Rep)
 ex3AOV <- aov(DW~Maturity*Cultivar+Rep, data=examp3)
 plot(ex3AOV)
 anova(ex3AOV)
