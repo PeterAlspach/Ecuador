@@ -1,8 +1,9 @@
+setwd("~/GitHub/Ecuador/ExptalData/Michelle")
 library(readxl)
-bbYield <- read_excel("~/GitHub/Ecuador/ExptalData/Michelle/blackberryData.xlsx")
+bbYield <- read_excel("blackberryData.xlsx")
 bbYield <- as.data.frame(bbYield)
 
-bbTrich <- read_excel("~/GitHub/Ecuador/ExptalData/Michelle/TrichodermBlackberry.xlsx")
+bbTrich <- read_excel("TrichodermBlackberry.xlsx")
 bbTrich <- as.data.frame(bbTrich)
 
 # Plot the data
