@@ -32,7 +32,7 @@ bbYield[bbYield$Localities=='Huachi'&
 str(bbYield)
 bbYield[bbYield$Localities=='Huachi'&
           bbYield$treatment=='Trichoeb' &
-          bbYield$replication=='2',]
+          bbYield$replication=='3',]
 
 length(bbYield[bbYield$Localities=='Huachi'&
           bbYield$treatment=='Trichoeb' &
