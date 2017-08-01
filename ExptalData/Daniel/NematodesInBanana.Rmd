@@ -1,0 +1,115 @@
+---
+title: "Control of nematodes in banana"
+subtitle: "Daniel Navia"
+author: "Peter Alspach"
+date: "August 2017"
+output:
+  html_document:
+  # html_notebook:
+  theme: spacelab
+toc: yes
+toc_depth: 5
+toc_float: yes
+code_folding: show
+---
+  
+```{r setup, include=FALSE}
+# knitr::opts_chunk$set(echo=TRUE, cache=TRUE, error=TRUE)
+knitr::opts_chunk$set(echo=TRUE, results=FALSE, cache=TRUE, error=TRUE)
+```
+
+## Getting R and RStudio
+First read the data into R.  This code will differ if the files are in different folders to mine (which they almost certainly will be), or are named differently
+
+```{r getData}
+setwd("~/GitHub/Ecuador/ExptalData/Daniel")
+rm(list=ls(all=TRUE)) # clear the global environment
+library(readxl)
+nemData <- read_excel('DATOS_PARA_ANALISIS_ESTADISTICO_SAS.XLSx',
+                      'DATOS_PARA_ANALISIS_ESTADISTICO')
+nemData <- as.data.frame(nemData)
+nemData[nemData$Trat==6, "Dosis"] <- 0 # set control to dose 0
+# str(nemData) # examine the structure of the data
+# summary(nemData) # a quick summary to check the data
+yldData <- as.data.frame(read_excel('DATOS_Peso.XLSx', 'Racimos', skip=1))
+names(yldData) <- sub('#', '', names(yldData))
+yldData$trtID <- factor(as.numeric(factor(paste0(yldData$Dosis, yldData$Trat)))) 
+##### Check the previous line ######
+yldData[yldData$Trat==6, "Dosis"] <- 0 # set control to dose 0
+# str(yldData)
+# summary(yldData)
+```
+
+```{r exploratoryPlots}
+library(lattice)
+# xyplot(Rrado~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData)
+# 
+# xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData)
+# xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData)
+
+xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData, subset=Fecha!=1)
+xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData, subset=Fecha!=1)
+xyplot(sqrt(Sheli)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData, subset=Fecha!=1)
+xyplot(sqrt(Sheli)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData, subset=Fecha!=1)
+
+# xyplot(log10(Rrado)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData)
+# xyplot(log10(Rrado)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData)
+# xyplot(log10(Rrado)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData, subset=Fecha!=1)
+# xyplot(log10(Rrado)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData,
+#        subset=Fecha!=1 & Rrado!=0)
+
+nemData$pSan <- nemData$Rsan/apply(nemData[,c("Rsan","Rnem","Rpod")], 1, sum)
+# xyplot(pSan~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData)
+# xyplot(pSan~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData)
+xyplot(pSan~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData, subset=Fecha!=1)
+xyplot(pSan~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData, subset=Fecha!=1)
+
+##@knitr setContrasts
+# First the rough ginverse function
+ginv <- function(M)
+{
+  if(nrow(M) < ncol(M)) t(ginv(t(M)))
+  else solve(crossprod(M), t(M))
+}
+
+M <- rbind(c(rep(1,5), -10, rep(1,5)), c(rep(-1,5), 0, rep(1,5)))
+Cmat <- ginv(M)
+dimnames(Cmat) <- list(NULL, c('Trt vs Control', 'High vs Low')) # optional
+contrasts(allData$trtID) <- Cmat
+
+yldAOV <- aov(Pes_Rac~trtID+factor(Rept), data=allData)
+summary(yldAOV, split=list(trtID=list('Trt vs Control'=1, 'High vs Low'=2)))
+model.tables(yldAOV, type='mean', se=TRUE)
+summary.lm(yldAOV)$coef
+
+##@knitr aggregate
+keyVars <- c('Rsan','Rnem','Rpod','Rtot','Rrado','Rheli','Srado','Sheli','Smelo','Slib')
+nemAgg <- aggregate(nemData[nemData$Fecha!=1, keyVars],
+                    nemData[nemData$Fecha!=1, c('Trat','Dosis','Rept')], sum)
+nemAgg$pSan <- nemAgg$Rsan/nemAgg$Rtot
+allData <- merge(yldData, nemAgg)
+names(allData)
+
+# Linear trends
+nemLin <- aggregate(nemData[nemData$Fecha!=1, c(keyVars, 'pSan')],
+                    nemData[nemData$Fecha!=1, c('Trat','Dosis','Rept')],
+                    function(x) coef(lm(x~I(1:3)))[2])
+names(nemLin)[-(1:3)] <- paste0(names(nemLin)[-(1:3)], 'L')
+allData <- merge(allData, nemLin)
+
+pSanLAOV <- aov(pSanL~trtID+factor(Rept), data=allData)
+##### Consider weighting by the standard error (or using robust regression ####
+summary(pSanLAOV, split=list(trtID=list('Trt vs Control'=1, 'High vs Low'=2)))
+model.tables(pSanLAOV, type='mean', se=TRUE)
+summary.lm(pSanLAOV)$coef
+
+
+plot(allData$pSan, allData$Pes_Rac) 
+cor.test(allData$pSan, allData$Pes_Rac) 
+
+plot(allData$pSanL, allData$Pes_Rac) 
+cor.test(allData$pSanL, allData$Pes_Rac) 
+
+names(allData)
+round(cor(allData[,-c(1:4,7)]), 3)
+```
