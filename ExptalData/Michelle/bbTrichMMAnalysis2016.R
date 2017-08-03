@@ -1,5 +1,5 @@
 ## Analysis of Michelle's Trichoderma data
-# something 
+## test change
 ##@knitr getData
 setwd('~/GitHub/Ecuador/ExptalData/Michelle')
 library(readxl)
