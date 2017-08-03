@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo=TRUE, results=FALSE, cache=TRUE, error=TRUE)
 ```
 
 ## Getting R and RStudio
-First read the data into R.  This code will differ if the files are in different folders to mine (which they almost certainly will be), or are named differently
+First read the data into R.  This code will differ if the files are in different folders to mine (which they almost certainly will be), or are named differently.
 
 ```{r getData}
 setwd("~/GitHub/Ecuador/ExptalData/Daniel")
@@ -39,6 +39,17 @@ yldData[yldData$Trat==6, "Dosis"] <- 0 # set control to dose 0
 # str(yldData)
 # summary(yldData)
 ```
+Notes on the code above:
+
+* Because the working directory is set at the beginning of the code `setwd()`, it is not necessary to give the enitre path of the file when calling `read_excel`
+* I like to start with an empty environment which is what the call to `rm()` (for 'remove') does.  You may prefer to omit this line
+* `read_excel` creates a structure known as a `tibble`, which I don't particularly like.  Hence I convert it to a simple data.frame with the `as.data.frame` call
+* Treatment 6 is the control, so I convert its dose to 0 (rather than 1)
+* This is one for both the nematode and yield data
+* I looked at the summaries of the data, but have commented these lines out.
+
+## Exploratory plots
+I use the `lattice` package for this, but these days many people prefer `ggplot2`.  Both taking some effort to master, and it might be better to spend the effort on `ggplot2`rather than `lattice`^[`ggplot2` wasn't available when I started using R so I learnt `lattice`.].
 
 ```{r exploratoryPlots}
 library(lattice)
@@ -63,6 +74,9 @@ nemData$pSan <- nemData$Rsan/apply(nemData[,c("Rsan","Rnem","Rpod")], 1, sum)
 # xyplot(pSan~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData)
 xyplot(pSan~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData, subset=Fecha!=1)
 xyplot(pSan~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData, subset=Fecha!=1)
+```
+
+```{r setContrasts}
 
 ##@knitr setContrasts
 # First the rough ginverse function
