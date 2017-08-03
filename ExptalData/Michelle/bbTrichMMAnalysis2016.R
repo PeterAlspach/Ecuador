@@ -58,3 +58,20 @@ confint(mm2, 'TreatmentTrichoeb:LocalidadTisaleo')
 
 newData$preds2 <- predict(mm2, newdata=newData)
 tapply(newData$preds2, newData[,c("Localidad","Treatment")], mean)
+
+## Related trichoderm populations to yield
+# Total trichoderma counts versus predicted total yield (from mm2)
+ttYld <- aggregate(newData$preds2, newData[,c("Localidad","Treatment","Replication")], mean)
+ttMerge <- merge(ttYld, bbTrich)
+par(mgp=c(2,0.8,0))
+plot(apply(ttMerge[ttMerge$Treatment=='Trichoeb', grep('onth', names(ttMerge))], 1, sum),
+     ttMerge[ttMerge$Treatment=='Trichoeb','x']/1000, xlab='Total trichomderma count',
+     ylab='Predicted yield (kg/plant)', col=ttMerge[ttMerge$Treatment=='Trichoeb','Localidad'],
+     pch=16)
+pc <- par()$usr
+legend(pc[1], pc[4]+(pc[4]-pc[3])/5, levels(ttMerge$Localidad), pch=16, col=1:3, bty='n',
+       ncol=3, xpd=TRUE)
+
+# First sum the yields by month
+bbYldM <- aggregate(bbYield[,'Yield'], bbYield[,c("Localities","treatment","Date","replication")],
+                    mean, na.rm=TRUE)
