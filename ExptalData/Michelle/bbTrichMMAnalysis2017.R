@@ -53,7 +53,11 @@ legend(1, pc[4]+(pc[4]-pc[3])/5,
 
 ##@knitr fitMM
 library(lme4)
-mm1 <- lmer(PesoPlanta~Treat+(1|Loc)+(1|Loc:Rep), data=bbAgg17)
+# First aggregate the 6 plants
+bbAgg17p <- aggregate(bbAgg17[,c("PesoPlanta","NFrutos","PesoFrut")], bbYld17[,c("Treat",'Loc','Rep')],
+                      mean, na.rm=TRUE)
+
+mm1 <- lmer(PesoPlanta~Treat+(1|Loc)+(1|Loc:Rep), data=bbAgg17p)
 # mm1 <- lmer(Yield~poly(n, 2)+Treatment+(1|Localidad)+(1|Localidad:Replication),
 #             data=bbTrich)
 # mm1 <- lmer(Yield~Treatment+n+(1|Localidad)+(1|Localidad:Replication),
@@ -63,10 +67,12 @@ summary(mm1)
 anova(mm1)
 confint(mm1, 'TreatTestigo')
 
-mm2 <- lmer(PesoPlanta~Treat+Treat:Loc+(1|Loc)+(1|Loc:Rep), data=bbAgg17)
+mm2 <- lmer(PesoPlanta~Treat+Treat:Loc+(1|Loc)+(1|Loc:Rep), data=bbAgg17p)
 plot(mm2)
 summary(mm2)
 anova(mm2)
 confint(mm2, 'TreatTestigo') # location Huachi
 confint(mm2, 'TreatTrichoderma:LocPillaro')
 confint(mm2, 'TreatTrichoderma:LocTisaleo')
+
+# See bbTrichMMAnalysis2016 for prediction method
