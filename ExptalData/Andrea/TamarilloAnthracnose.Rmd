@@ -1,0 +1,87 @@
+---
+title: "Anthracnose on tamarillo selections"
+subtitle: "Andrea Sotomayor"
+author: "Peter Alspach"
+date: "August 2017"
+output:
+  html_document:
+  # html_notebook:
+  theme: spacelab
+toc: yes
+toc_depth: 5
+toc_float: yes
+code_folding: show
+---
+  
+```{r setup, include=FALSE}
+# knitr::opts_chunk$set(echo=TRUE, cache=TRUE, error=TRUE)
+knitr::opts_chunk$set(echo=TRUE, cache=TRUE, error=TRUE)
+```
+
+## Get the data
+
+```{r getData}
+setwd("~/GitHub/Ecuador/ExptalData/Andrea")
+rm(list=ls()) # clears the global environment
+library(readxl)
+TaData<- read_excel("TreeTomatoData.xlsx", sheet = "Data", na = 'NA')
+TaData$Material <- factor(TaData$Material)
+
+# summary(TaData)
+# table(TaData$Material)
+
+TaData$lesArea <- TaData$Decua*TaData$Dlong*pi # lesion area
+
+TaAgg <- aggregate(TaData[,c("Decua","Dlong","lesArea")], TaData[,c("Material","Date","Rep")], mean,
+                   na.rm=TRUE)
+```
+
+## Plot lesion areas for controls on time
+
+```{r plotConts, fig.height=6}
+ttCont <- TaAgg[substring(TaAgg$Material, 1, 2)=='CP',]
+ttCont$Material <- factor(ttCont$Material)
+plot(ttCont$Date, sqrt(ttCont$lesArea), xlab='Date', ylab='Average lesion area', pch=16,
+     col=ttCont$Material)
+pc <- par()$usr # coordinates of the plot corners
+legend(pc[1], pc[4]+diff(pc[3:4])/10, levels(ttCont$Material), col=factor(levels(ttCont$Material)),
+       pch=16, ncol=3, bty='n', xpd=TRUE)
+ttAOV <- aov(sqrt(lesArea)~Material+factor(Date), data=ttCont)
+par(mfrow=c(2,2))
+plot(ttAOV)
+anova(ttAOV)
+```
+
+CPA was yellow fruit from the shop, and the CPPnumbers were from different plants of the same purple fleshed cultivar growing at Tumbaco.  The question is whether the difference is due to date or plant (perhaps frujit of different maturity).
+
+* Results for CPP32 were similar on both dates
+* Care was taken to ensure standard process in all dates.  That is, fruit were surface steriled and kept in a temperature and humidity controled cabinet
+
+For these reasons we suspect that the differences were due to plants/cultivars rather than dates.  Thus we do not need to adjust selection results for dates.
+
+## Examine the selections
+
+The families were planted in blocks and thus we cannot really use field position in any analysis.
+
+Colnduct analysis of variance
+```{r selnsAOV}
+selnAOV <- aov(sqrt(lesArea)~Material+factor(Date), data=TaAgg)
+par(mfrow=c(2,2))
+plot(selnAOV)
+anova(selnAOV)
+```
+
+However, a mixed model is probably more appropriate
+```{r selnsMM}
+library(lme4)
+TaAgg$DateFact <- factor(TaAgg$Date)
+
+selnMM <- lmer(sqrt(lesArea)~-1+Material+(1|DateFact), data=TaAgg)
+par(mfrow=c(2,2))
+plot(selnMM)
+anova(selnMM)
+ests <- summary(selnMM)$coefficients # get the estimates
+ests <- ests[order(ests[,'Estimate']),]
+ests
+```
+
