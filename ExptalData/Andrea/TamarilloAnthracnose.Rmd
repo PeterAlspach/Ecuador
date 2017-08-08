@@ -36,52 +36,104 @@ TaAgg <- aggregate(TaData[,c("Decua","Dlong","lesArea")], TaData[,c("Material","
                    na.rm=TRUE)
 ```
 
+Notes on the code:
+
+* It can be useful to start with a clean global environment.  This is achieved by `rm(list=ls())`
+* The `aggregate` is useful for aggregating a number of variates (in this case lesion dimensions) according to some grouping (in this case 'Material', 'Date' and 'Rep'; i.e., giving the mean for each tray of 5 fruit).
+
 ## Plot lesion areas for controls on time
 
-```{r plotConts, fig.height=6}
+```{r plotConts, fig.height=7}
 ttCont <- TaAgg[substring(TaAgg$Material, 1, 2)=='CP',]
 ttCont$Material <- factor(ttCont$Material)
 plot(ttCont$Date, sqrt(ttCont$lesArea), xlab='Date', ylab='Average lesion area', pch=16,
      col=ttCont$Material)
 pc <- par()$usr # coordinates of the plot corners
-legend(pc[1], pc[4]+diff(pc[3:4])/10, levels(ttCont$Material), col=factor(levels(ttCont$Material)),
+legend(pc[1], pc[4]+diff(pc[3:4])/8, levels(ttCont$Material), col=factor(levels(ttCont$Material)),
        pch=16, ncol=3, bty='n', xpd=TRUE)
+
 ttAOV <- aov(sqrt(lesArea)~Material+factor(Date), data=ttCont)
-par(mfrow=c(2,2))
+par(mfrow=c(2,2), mgp=c(2, 0.8, 0), mar=c(4,3,1.5,0.5))
 plot(ttAOV)
 anova(ttAOV)
 ```
-
-CPA was yellow fruit from the shop, and the CPPnumbers were from different plants of the same purple fleshed cultivar growing at Tumbaco.  The question is whether the difference is due to date or plant (perhaps frujit of different maturity).
+Notes on the code:
+* We use `substring` to get those values that begin with 'CP'
+* `par` can be used to set graphics parameters (e.g., `par(mfrow=c(2,2))`).  It can also be called to get the parameters, which are named.  `par()$usr` gives the location of the extremes of the plot in graph units.  This is useful to ensure that the legend is located relative to the plot, irrespective on the magnitude of the values.  It doesn't work too well in Rmarkdown as it is also affect by the `fig.height` option
+* The graphics parameters `mgp` and `mar` are introdcuted
+* The analysis of variance is a quick look to confirm that Date effects are likely to be important. 
+CPA was yellow fruit from the shop, and the CPPnumbers were from different plants of the same purple fleshed cultivar growing at Tumbaco.  The question is whether the difference is due to date or plant (perhaps fruit of different maturity).
 
 * Results for CPP32 were similar on both dates
 * Care was taken to ensure standard process in all dates.  That is, fruit were surface steriled and kept in a temperature and humidity controled cabinet
 
-For these reasons we suspect that the differences were due to plants/cultivars rather than dates.  Thus we do not need to adjust selection results for dates.
+For these reasons we suspect that the differences were due to plants/cultivars/fruit maturity rather than date _per se_.  Nevertheless, it is probably prudent to adjust for date (i.e., include Date in the model).
 
 ## Examine the selections
 
 The families were planted in blocks and thus we cannot really use field position in any analysis.
 
-Colnduct analysis of variance
-```{r selnsAOV}
+Conduct analysis of variance
+```{r selnsAOV, fig.height=7}
 selnAOV <- aov(sqrt(lesArea)~Material+factor(Date), data=TaAgg)
-par(mfrow=c(2,2))
+selnAOV1 <- aov(sqrt(lesArea)~factor(Date)+Material, data=TaAgg) # fitting Date first
+par(mfrow=c(2,2), mgp=c(2, 0.8, 0), mar=c(4,3,1.5,0.5))
 plot(selnAOV)
 anova(selnAOV)
 ```
 
 However, a mixed model is probably more appropriate
-```{r selnsMM}
+```{r selnsMM, fig.height=6}
 library(lme4)
 TaAgg$DateFact <- factor(TaAgg$Date)
 
 selnMM <- lmer(sqrt(lesArea)~-1+Material+(1|DateFact), data=TaAgg)
-par(mfrow=c(2,2))
+par(mfrow=c(1,1), mgp=c(2, 0.8, 0), mar=c(4,3,0.5,0.5))
 plot(selnMM)
 anova(selnMM)
 ests <- summary(selnMM)$coefficients # get the estimates
-ests <- ests[order(ests[,'Estimate']),]
-ests
+(estsOrd <- ests[order(ests[,'Estimate']),])
 ```
 
+Notes on the code:
+
+* The concept of mixed models is a bit complex, and I will not attempt to summarise it in a few sentences.  Put simple we model fixed and random effects separately.  Random effects are coded in the `lmer` series of functions by putting them in brackets
+* The parameterisation is, like `lm`, such that effects are relative to the first level of the first fixed effect.  When there is only one factor as a fixed effect, it can be useful to circumvent this by not fitting an intercept (or general mean).  This is the purpose of the `-1`in the model formula
+* The standar errors of the estimates vary from `r round(min(ests[,'Std. Error']), 2)` to `r round(max(ests[,'Std. Error']), 2)`, with the lower values generally being the controls which had more replications.  The mean standard error is `r round(mean(ests[,'Std. Error']), 2)`, and thus the mean standard error of the difference between two estimates is sqrt(2) times this (i.e., `r round(sqrt(2)*mean(ests[,'Std. Error']), 2)`).  To get the approximate least significant difference (LSD) at the 5% level this should be multipled by 2
+* The best selection (i.e., that with the least value after adjusting for date) is `r gsub('Material', '', rownames(ests)[ests[,'Estimate']==min(ests[,'Estimate'])])` at `r round(min(ests[,'Estimate']), 2)`.  Add the LSD to this value to get those selections which are'not significantly different' from this (but remember to use your another knowledge in interpreting this). 
+
+## Compare simple, aov and MM means
+It might be interesting to compare how the various means for the selections compare with one another.
+
+```{r compEsts, fig.height=7}
+ttMn <- cbind(ests, simpleMn=tapply(sqrt(TaAgg$lesArea), TaAgg$Material, mean, na.rm=TRUE),
+              aovEst=model.tables(selnAOV, type='means')$tables$Material,
+              aov1Est=model.tables(selnAOV1, type='means')$tables$Material)
+par(mfrow=c(2,2), mgp=c(2, 0.8, 0), mar=c(4,3,0.5,0.5))
+axLim <- range(ttMn[,c('simpleMn','aovEst','aov1Est','Estimate')])
+plot(ttMn[,'simpleMn'], ttMn[,'aovEst'], xlab='Simple mean', xlim=axLim, ylim=axLim, 
+     ylab='AOV est (Material first)', panel.last=abline(0, 1, col='brown'))
+plot(ttMn[,'simpleMn'], ttMn[,'aov1Est'], xlab='Simple mean', xlim=axLim, ylim=axLim,
+     ylab='AOV est (Date first)', panel.last=abline(0, 1, col='brown'))
+plot(ttMn[,'simpleMn'], ttMn[,'Estimate'], xlab='Simple mean', xlim=axLim, ylim=axLim,
+     ylab='MM est', panel.last=abline(0, 1, col='brown'))
+plot(ttMn[,'aov1Est'], ttMn[,'aovEst'], xlab='AOV est (Date first)', xlim=axLim, ylim=axLim,
+     ylab='MM est', panel.last=abline(0, 1, col='brown'))
+```
+
+Notes on the code:
+
+* Means will all be in the same order so we can simply `cbind` them together
+* The use of `range` and `xlim` and `ylim` are introduced
+* In the `plot` function call we have used `panel.last` which allows use to call a particular function to be execut after the points have been plotted (`panel.first` executes the function before the plotting of the points).  Here `abline` is called, which as formulated draws the line of equality in brown
+* It can be seen that both the AOV fitting dates first, and the mixed model adjust for dates.  When the experiment is unbalanced (as this one is), mixed models are generally preferred.
+
+## Dot plot of the estimates
+One could fit the families separately, but I have decided to simply draw a dotplot - colour-codes by family.
+
+```{r dotPlot}
+
+```
+
+### Heritability
+It might be possible to get some sort of heritability estimate from these data, but it would be unlikely to be particularly accurate. _So comment on what can be gleaned from the dotplot_
