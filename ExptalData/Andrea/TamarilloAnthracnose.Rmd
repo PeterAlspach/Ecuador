@@ -39,7 +39,7 @@ TaAgg <- aggregate(TaData[,c("Decua","Dlong","lesArea")], TaData[,c("Material","
 Notes on the code:
 
 * It can be useful to start with a clean global environment.  This is achieved by `rm(list=ls())`
-* The `aggregate` is useful for aggregating a number of variates (in this case lesion dimensions) according to some grouping (in this case 'Material', 'Date' and 'Rep'; i.e., giving the mean for each tray of 5 fruit).
+* The `aggregate` function is useful for aggregating a number of variates (in this case lesion dimensions) according to some grouping (in this case 'Material', 'Date' and 'Rep'; i.e., giving the mean for each tray of 5 fruit).
 
 ## Plot lesion areas for controls on time
 
@@ -58,6 +58,7 @@ plot(ttAOV)
 anova(ttAOV)
 ```
 Notes on the code:
+
 * We use `substring` to get those values that begin with 'CP'
 * `par` can be used to set graphics parameters (e.g., `par(mfrow=c(2,2))`).  It can also be called to get the parameters, which are named.  `par()$usr` gives the location of the extremes of the plot in graph units.  This is useful to ensure that the legend is located relative to the plot, irrespective on the magnitude of the values.  It doesn't work too well in Rmarkdown as it is also affect by the `fig.height` option
 * The graphics parameters `mgp` and `mar` are introdcuted
@@ -65,7 +66,7 @@ Notes on the code:
 CPA was yellow fruit from the shop, and the CPPnumbers were from different plants of the same purple fleshed cultivar growing at Tumbaco.  The question is whether the difference is due to date or plant (perhaps fruit of different maturity).
 
 * Results for CPP32 were similar on both dates
-* Care was taken to ensure standard process in all dates.  That is, fruit were surface steriled and kept in a temperature and humidity controled cabinet
+* Care was taken to ensure standard process in all dates.  That is, fruit were surface sterilised and kept in a temperature and humidity controlled cabinet
 
 For these reasons we suspect that the differences were due to plants/cultivars/fruit maturity rather than date _per se_.  Nevertheless, it is probably prudent to adjust for date (i.e., include Date in the model).
 
@@ -97,13 +98,13 @@ ests <- summary(selnMM)$coefficients # get the estimates
 
 Notes on the code:
 
-* The concept of mixed models is a bit complex, and I will not attempt to summarise it in a few sentences.  Put simple we model fixed and random effects separately.  Random effects are coded in the `lmer` series of functions by putting them in brackets
+* The concept of mixed models is a bit complex, and I will not attempt to summarise it in a few sentences.  Put simply we model fixed and random effects separately.  Random effects are coded in the `lmer` series of functions by putting them in brackets
 * The parameterisation is, like `lm`, such that effects are relative to the first level of the first fixed effect.  When there is only one factor as a fixed effect, it can be useful to circumvent this by not fitting an intercept (or general mean).  This is the purpose of the `-1`in the model formula
 * The standar errors of the estimates vary from `r round(min(ests[,'Std. Error']), 2)` to `r round(max(ests[,'Std. Error']), 2)`, with the lower values generally being the controls which had more replications.  The mean standard error is `r round(mean(ests[,'Std. Error']), 2)`, and thus the mean standard error of the difference between two estimates is sqrt(2) times this (i.e., `r round(sqrt(2)*mean(ests[,'Std. Error']), 2)`).  To get the approximate least significant difference (LSD) at the 5% level this should be multipled by 2
-* The best selection (i.e., that with the least value after adjusting for date) is `r gsub('Material', '', rownames(ests)[ests[,'Estimate']==min(ests[,'Estimate'])])` at `r round(min(ests[,'Estimate']), 2)`.  Add the LSD to this value to get those selections which are'not significantly different' from this (but remember to use your another knowledge in interpreting this). 
+* The best selection (i.e., that with the least value after adjusting for date) is `r gsub('Material', '', rownames(ests)[ests[,'Estimate']==min(ests[,'Estimate'])])` at `r round(min(ests[,'Estimate']), 2)`.  Add the LSD to this value to get those selections which are'not significantly different' from this (but remember to use your other knowledge in interpreting this). 
 
 ## Compare simple, aov and MM means
-It might be interesting to compare how the various means for the selections compare with one another.
+It might be interesting to compare how the selection means for the different models compare with one another.
 
 ```{r compEsts, fig.height=7}
 ttMn <- cbind(ests, simpleMn=tapply(sqrt(TaAgg$lesArea), TaAgg$Material, mean, na.rm=TRUE),
@@ -125,14 +126,38 @@ Notes on the code:
 
 * Means will all be in the same order so we can simply `cbind` them together
 * The use of `range` and `xlim` and `ylim` are introduced
-* In the `plot` function call we have used `panel.last` which allows use to call a particular function to be execut after the points have been plotted (`panel.first` executes the function before the plotting of the points).  Here `abline` is called, which as formulated draws the line of equality in brown
+* In the `plot` function call we have used `panel.last` which allows us to call a particular function to be executed after the points have been plotted (`panel.first` executes the function before the plotting of the points).  Here `abline` is called, which as formulated draws the line of equality in brown
 * It can be seen that both the AOV fitting dates first, and the mixed model adjust for dates.  When the experiment is unbalanced (as this one is), mixed models are generally preferred.
 
 ## Dot plot of the estimates
-One could fit the families separately, but I have decided to simply draw a dotplot - colour-codes by family.
+One could fit the families separately, but I have decided to simply draw a dotplot - colour-coded by family.
 
-```{r dotPlot}
-
+```{r dotPlot, fig.height=10}
+rownames(estsOrd) <- gsub('Material', '', rownames(estsOrd))
+# Omit 3 and6 since I don't know what they are
+dpData <- as.data.frame(estsOrd[!(rownames(estsOrd) %in% c(3,6)),])
+dpData$Family <- substring(rownames(dpData), 1, 4)
+dpData[substring(dpData$Family, 1, 1)=='C','Family'] <- 
+  substring(dpData[substring(dpData$Family, 1, 1)=='C','Family'], 1, 3)
+dpData[substring(dpData$Family, 1, 1)=='G' &
+         substring(dpData$Family, 4) %in% c('P','R'),'Family'] <- 
+  substring(dpData[substring(dpData$Family, 1, 1)=='G' &
+                     substring(dpData$Family, 4) %in% c('P','R'),'Family'], 1, 3)
+dpData$Family <- factor(dpData$Family, unique(dpData$Family))
+ttCols <- topo.colors(nlevels(dpData$Family)-2)
+dpData[substring(dpData$Family, 1, 1)=='G', 'famCols'] <- 
+  ttCols[as.numeric(dpData[substring(dpData$Family, 1, 1)=='G', 'Family'])]
+dpData[dpData$Family %in% c('CPA','CPP'), 'famCols'] <- 'black' 
+dpData <- dpData[order(-dpData$Estimate),] # reverse order
+nR <- nrow(dpData)
+par(mfrow=c(1,1), mgp=c(2,0.8,0), mar=c(4,8,0.5,0.5))
+plot(dpData$Estimate, 1:nR, xlim=c(0, max(dpData$Estimate+dpData$`Std. Error`)),
+     col=dpData$famCols, pch=16, yaxt='n', xlab='Square root of lesion area', ylab='')
+arrows(dpData$Estimate+dpData$`Std. Error`, 1:nR,
+       dpData$Estimate-dpData$`Std. Error`, 1:nR,
+       angle=90, length=0.01, code=3, col=dpData$famCols)
+axis(2, 1:nR, rep('', nR))
+text(-0.45, 1:nR, rownames(dpData), col=dpData$famCols, adj=1, cex=0.5, xpd=TRUE)
 ```
 
 ### Heritability
