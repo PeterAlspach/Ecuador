@@ -132,7 +132,7 @@ Notes on the code:
 ## Dot plot of the estimates
 One could fit the families separately, but I have decided to simply draw a dotplot - colour-coded by family.
 
-```{r dotPlot, fig.height=10}
+```{r dotPlot, fig.height=12}
 rownames(estsOrd) <- gsub('Material', '', rownames(estsOrd))
 # Omit 3 and6 since I don't know what they are
 dpData <- as.data.frame(estsOrd[!(rownames(estsOrd) %in% c(3,6)),])
@@ -144,7 +144,7 @@ dpData[substring(dpData$Family, 1, 1)=='G' &
   substring(dpData[substring(dpData$Family, 1, 1)=='G' &
                      substring(dpData$Family, 4) %in% c('P','R'),'Family'], 1, 3)
 dpData$Family <- factor(dpData$Family, unique(dpData$Family))
-ttCols <- topo.colors(nlevels(dpData$Family)-2)
+ttCols <- rainbow(nlevels(dpData$Family)-1)
 dpData[substring(dpData$Family, 1, 1)=='G', 'famCols'] <- 
   ttCols[as.numeric(dpData[substring(dpData$Family, 1, 1)=='G', 'Family'])]
 dpData[dpData$Family %in% c('CPA','CPP'), 'famCols'] <- 'black' 
@@ -158,7 +158,22 @@ arrows(dpData$Estimate+dpData$`Std. Error`, 1:nR,
        angle=90, length=0.01, code=3, col=dpData$famCols)
 axis(2, 1:nR, rep('', nR))
 text(-0.45, 1:nR, rownames(dpData), col=dpData$famCols, adj=1, cex=0.5, xpd=TRUE)
+legend(3.3, nR+1, c(levels(dpData$Family)[-(9:10)],'CP'), col=c(ttCols[-9], 'black'),
+       pch=16, cex=1.2, bty='n') 
 ```
 
+Notes on the code:
+
+* This code introduces several new functions:
+    + `rownames`
+    + `nrow`
+    + `unique` to return only the unique values in the order in which they appear
+    + `gsub` to substitute a target string with a replacement string in the vector of characters.  In this case it replaces 'material' with the empty string '' (i.e., it removes 'material'from the row names)
+    + `text`to place text on a plot
+    + `arrows` to draw arrows.  By making the angle of the arrow point 90, we can draw standard error bars
+    + `rainbow` to create colours in the spectrum.  One can also use `terrain.colors`, `topo.colors` and `heat.colors`
+* It also introduces the `%in%` operator which returns TRUE if an element of the vector on the left hand side is present in the vector on the right, and FALSE otherwise
+* To undersand the code, it is best to step through it line by line, making sure that each line is understood.  It can also be useful to look at the help files on the functions. If you still can't follow, please send me an email.
+    
 ### Heritability
-It might be possible to get some sort of heritability estimate from these data, but it would be unlikely to be particularly accurate. _So comment on what can be gleaned from the dotplot_
+It might be possible to get some sort of heritability estimate from these data, but it would be unlikely to be particularly accurate. The dotplot shows some grouping of the individuals within families (e.g., selections from GT9 are all susecptible, whereas those from GT15 tend to be resistant or, at least, less susceptible).  The grouping is not particularly tight which will be partly due to differing (and unknown) pollen sources, but also suggests to me that the heritability was not especially high.
