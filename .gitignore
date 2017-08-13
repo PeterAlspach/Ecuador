@@ -37,7 +37,7 @@ DataManagement/reexceltipsandtricks/
 # !*.nb.html
 *.lnk
 *.mediawiki
-*.pdf
+# *.pdf
 *.png
 # *.jpg
 *.svg
