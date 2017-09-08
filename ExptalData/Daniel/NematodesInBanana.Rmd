@@ -41,27 +41,28 @@ yldData[yldData$Trat==6, "Dosis"] <- 0 # set control to dose 0
 ```
 Notes on the code above:
 
-* Because the working directory is set at the beginning of the code `setwd()`, it is not necessary to give the enitre path of the file when calling `read_excel`
+* Because the working directory is set at the beginning of the code `setwd()`, it is not necessary to give the entire path of the file when calling `read_excel`
 * I like to start with an empty environment which is what the call to `rm()` (for 'remove') does.  You may prefer to omit this line
 * `read_excel` creates a structure known as a `tibble`, which I don't particularly like.  Hence I convert it to a simple data.frame with the `as.data.frame` call
 * Treatment 6 is the control, so I convert its dose to 0 (rather than 1)
-* This is one for both the nematode and yield data
+* I remove the `#` from the names in `yldData` using the `sub` function
 * I looked at the summaries of the data, but have commented these lines out.
 
 ## Exploratory plots
-I use the `lattice` package for this, but these days many people prefer `ggplot2`.  Both taking some effort to master, and it might be better to spend the effort on `ggplot2`rather than `lattice`^[`ggplot2` wasn't available when I started using R so I learnt `lattice`.].
+I use the `lattice` package for this, but these days many people prefer `ggplot2`.  Both take some effort to master, and it might be better to spend the effort on `ggplot2`rather than `lattice`^[`ggplot2` wasn't available when I started using R so I learnt `lattice`.].
 
 ```{r exploratoryPlots}
 library(lattice)
+options(warn= -1) # to suprress warnings
 # xyplot(Rrado~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData)
 # 
 # xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData)
 # xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData)
 
-xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData, subset=Fecha!=1)
-xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData, subset=Fecha!=1)
-xyplot(sqrt(Sheli)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData, subset=Fecha!=1)
-xyplot(sqrt(Sheli)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData, subset=Fecha!=1)
+xyplot(sqrt(Rrado)~Fecha | Trat, type=c('p', 'smooth', 'r'), group=Dosis, data=nemData,
+       subset=Fecha!=1)
+xyplot(sqrt(Sheli)~Fecha | Trat, type=c('p', 'smooth', 'r'), group=Dosis, data=nemData,
+       subset=Fecha!=1)
 
 # xyplot(log10(Rrado)~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData)
 # xyplot(log10(Rrado)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData)
@@ -72,32 +73,28 @@ xyplot(sqrt(Sheli)~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData, su
 nemData$pSan <- nemData$Rsan/apply(nemData[,c("Rsan","Rnem","Rpod")], 1, sum)
 # xyplot(pSan~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData)
 # xyplot(pSan~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData)
-xyplot(pSan~Fecha | Trat, type=c('p', 'smooth'), group=Dosis, data=nemData, subset=Fecha!=1)
-xyplot(pSan~Fecha | Trat, type=c('p', 'r'), group=Dosis, data=nemData, subset=Fecha!=1)
+xyplot(pSan~Fecha | Trat, type=c('p', 'smooth', 'r'), group=Dosis, data=nemData, subset=Fecha!=1)
+options(warn=0) # turn warnings back on
 ```
+Notes on the code above:
 
-```{r setContrasts}
+* I will not go into extensive detail of the `lattice` code.  However, not that a separate plot (or panel) is produced for each level of the variate following the vertical bar |, and that the `group` variate is distinguished by different colours on the same plot.  The `type=c(...)` tells lattice to show the points ('p'), draw a smooth line ('smooth') and a simple linear regression fit ('r')
+* It was hoped that the first date would give a base line for each experimental unit.  However, there were very variable and tended to confuse rather than elucidate.  Hence I omitted them, although one could easily change this
+* A square-root transformation is often useful when examining counts, and this proved to be the case here.
 
-##@knitr setContrasts
-# First the rough ginverse function
-ginv <- function(M)
-{
-  if(nrow(M) < ncol(M)) t(ginv(t(M)))
-  else solve(crossprod(M), t(M))
-}
+## Analysis of variance
 
-M <- rbind(c(rep(1,5), -10, rep(1,5)), c(rep(-1,5), 0, rep(1,5)))
-Cmat <- ginv(M)
-dimnames(Cmat) <- list(NULL, c('Trt vs Control', 'High vs Low')) # optional
-contrasts(allData$trtID) <- Cmat
+I don't see anything promising in the figures, but I know very little about nematodes.  Nevertheless, I'll proceed with an analysis of variance setting up a couple of _a priori_ orthogonal contrasts:
 
-yldAOV <- aov(Pes_Rac~trtID+factor(Rept), data=allData)
-summary(yldAOV, split=list(trtID=list('Trt vs Control'=1, 'High vs Low'=2)))
-model.tables(yldAOV, type='mean', se=TRUE)
-summary.lm(yldAOV)$coef
+* Compare the untreated control with the average of all other treatments
+* Compare the high and low rates of application.
 
-##@knitr aggregate
+### Create some summary variates
+First we need to create some summary variates of interest.
+
+```{r aggregate}
 keyVars <- c('Rsan','Rnem','Rpod','Rtot','Rrado','Rheli','Srado','Sheli','Smelo','Slib')
+# Totals
 nemAgg <- aggregate(nemData[nemData$Fecha!=1, keyVars],
                     nemData[nemData$Fecha!=1, c('Trat','Dosis','Rept')], sum)
 nemAgg$pSan <- nemAgg$Rsan/nemAgg$Rtot
@@ -110,6 +107,47 @@ nemLin <- aggregate(nemData[nemData$Fecha!=1, c(keyVars, 'pSan')],
                     function(x) coef(lm(x~I(1:3)))[2])
 names(nemLin)[-(1:3)] <- paste0(names(nemLin)[-(1:3)], 'L')
 allData <- merge(allData, nemLin)
+```
+
+Notes on the code above:
+
+* It is often a good idea to define the key variates in one line to make it easier to work on these in subsequent bits of the code.  It also makes it easy to change what is regarded as a key variate
+* `aggregate` is used to get the total counts across all dates for each variate in `keyVars`, but the first date is excluded (`nemData$Fecha!=1`, where the ! means 'not')
+* The resulting summary of the nematode data is then merge with the yield data.  Since no merge columns were specified, the merging is based on columns with the same name in each of `yldData` and `nemData`
+* `aggregate` applies a function to groupings of the data (e.g., `sum` above).  However, one can also supply a custom function, either defined beforehand or made within the `aggregate` call.  The latter is done here.  The defined function returns the second coefficient from a linear regression fit (i.e., the slope)
+* The resulting object of coefficients is merged with `allData`, which now contains all the data that we wish to analyse.
+
+### Set the contrasts
+Contrasts are single degree of freedom comparisons of particular treatment sets.  Setting them up can be a little complicated in an unbalanced situation, but here there are an even number of replicates for each treatment and the situation is nicely balanced.  In this situation, the contrast coefficients must sum to zero, and two contrasts are said to be orthogonal (i.e., there is no 'overlap' between the comparisons) if the product of all pairs of coefficients also sum to zero. 
+```{r setContrasts}
+
+# First the rough ginverse function
+ginv <- function(M)
+{
+  if(nrow(M) < ncol(M)) t(ginv(t(M)))
+  else solve(crossprod(M), t(M))
+}
+
+M <- rbind(c(rep(1,5), -10, rep(1,5)), c(rep(-1,5), 0, rep(1,5)))
+Cmat <- ginv(M)
+dimnames(Cmat) <- list(NULL, c('Trt vs Control', 'High vs Low')) # optional
+contrasts(allData$trtID) <- Cmat
+```
+
+Notes on the code above:
+
+* `M` is the contrast matrix and is created by binding two rows (`rbind`) together
+    * The first row repeats 1 five times, then has -10 and then repeats 1 five times (i.e., it is 1,1,1,1,1, -10, 1,1,1,1,1).  These coefficients will be applied to the levels of `allData$trtID`, which are `r levels(allData$trtID)`, where 6 is the untreated control.  Thus, one can see the contrast effectively compares the mean of the treated plants with the untreated control
+    * Similarly the next contrast is between the high and low rates
+* If one does the sums, one can see that these two contrasts are orthogonal
+* The remainder of the code gives the contrasts names, and applied them to `allData$trtID`.
+
+```{r aov}
+yldAOV <- aov(Pes_Rac~trtID+factor(Rept), data=allData)
+summary(yldAOV, split=list(trtID=list('Trt vs Control'=1, 'High vs Low'=2)))
+model.tables(yldAOV, type='mean', se=TRUE)
+summary.lm(yldAOV)$coef
+
 
 pSanLAOV <- aov(pSanL~trtID+factor(Rept), data=allData)
 ##### Consider weighting by the standard error (or using robust regression ####
